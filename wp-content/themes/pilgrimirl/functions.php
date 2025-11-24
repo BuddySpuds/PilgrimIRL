@@ -11,38 +11,65 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Helper function to get asset URL with automatic minification in production
+ *
+ * @param string $path Relative path to asset (e.g., 'css/footer.css')
+ * @return string Full URL to asset (.min version in production)
+ */
+function pilgrimirl_asset($path) {
+    $theme_uri = get_stylesheet_directory_uri();
+    $theme_dir = get_stylesheet_directory();
+
+    // Use minified version in production (when WP_DEBUG is false)
+    if (!defined('WP_DEBUG') || WP_DEBUG === false) {
+        $min_path = preg_replace('/\.(css|js)$/', '.min.$1', $path);
+        $min_file = $theme_dir . '/' . $min_path;
+
+        // Check if minified file exists
+        if (file_exists($min_file)) {
+            return $theme_uri . '/' . $min_path;
+        }
+    }
+
+    // Return original file
+    return $theme_uri . '/' . $path;
+}
+
+/**
+ * Get current theme version for cache busting
+ *
+ * @return string Theme version
+ */
+function pilgrimirl_version() {
+    $theme = wp_get_theme();
+    return $theme->get('Version');
+}
+
+/**
  * Enqueue parent and child theme styles
  */
 function pilgrimirl_enqueue_styles() {
+    $version = pilgrimirl_version();
+
     // Enqueue parent theme style
-    wp_enqueue_style('parent-style', get_template_directory_uri() . '/style.css');
-    
-    // Enqueue child theme style
-    wp_enqueue_style('pilgrimirl-style', get_stylesheet_directory_uri() . '/style.css', array('parent-style'), '1.0.0');
-    
-    // Enqueue county pages CSS
-    wp_enqueue_style('pilgrimirl-county-pages', get_stylesheet_directory_uri() . '/css/county-pages.css', array('pilgrimirl-style'), '1.0.0');
-    
-    // Enqueue footer CSS
-    wp_enqueue_style('pilgrimirl-footer', get_stylesheet_directory_uri() . '/css/footer.css', array('pilgrimirl-style'), '1.0.0');
-    
-    // Enqueue homepage filters CSS
-    wp_enqueue_style('pilgrimirl-homepage-filters', get_stylesheet_directory_uri() . '/css/homepage-filters.css', array('pilgrimirl-style'), '1.0.0');
-    
+    wp_enqueue_style('parent-style', get_template_directory_uri() . '/style.css', array(), $version);
+
+    // Enqueue child theme style (main stylesheet)
+    wp_enqueue_style('pilgrimirl-style', get_stylesheet_directory_uri() . '/style.css', array('parent-style'), $version);
+
+    // Enqueue component CSS (automatically uses .min.css in production)
+    wp_enqueue_style('pilgrimirl-county-pages', pilgrimirl_asset('css/county-pages.css'), array('pilgrimirl-style'), $version);
+    wp_enqueue_style('pilgrimirl-footer', pilgrimirl_asset('css/footer.css'), array('pilgrimirl-style'), $version);
+    wp_enqueue_style('pilgrimirl-homepage-filters', pilgrimirl_asset('css/homepage-filters.css'), array('pilgrimirl-style'), $version);
+
     // Enqueue Google Fonts
-    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
-    
-    // Enqueue debug utilities (no dependencies, loads first)
-    wp_enqueue_script('pilgrimirl-debug', get_stylesheet_directory_uri() . '/js/debug-utils.js', array(), '1.0.0', true);
+    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap', array(), null);
 
-    // Enqueue custom JavaScript
-    wp_enqueue_script('pilgrimirl-scripts', get_stylesheet_directory_uri() . '/js/pilgrimirl.js', array('jquery', 'pilgrimirl-debug'), '1.0.0', true);
-
-    // Enqueue maps JavaScript
-    wp_enqueue_script('pilgrimirl-maps', get_stylesheet_directory_uri() . '/js/maps.js', array('jquery', 'pilgrimirl-debug'), '1.0.0', true);
-
-    // Enqueue homepage filters JavaScript
-    wp_enqueue_script('pilgrimirl-homepage-filters', get_stylesheet_directory_uri() . '/js/homepage-filters.js', array('jquery', 'pilgrimirl-debug'), '1.0.0', true);
+    // Enqueue JavaScript (automatically uses .min.js in production)
+    wp_enqueue_script('pilgrimirl-debug', pilgrimirl_asset('js/debug-utils.js'), array(), $version, true);
+    wp_enqueue_script('pilgrimirl-scripts', pilgrimirl_asset('js/pilgrimirl.js'), array('jquery', 'pilgrimirl-debug'), $version, true);
+    wp_enqueue_script('pilgrimirl-maps', pilgrimirl_asset('js/maps.js'), array('jquery', 'pilgrimirl-debug'), $version, true);
+    wp_enqueue_script('pilgrimirl-homepage-filters', pilgrimirl_asset('js/homepage-filters.js'), array('jquery', 'pilgrimirl-debug'), $version, true);
     
     // Localize script for AJAX
     wp_localize_script('pilgrimirl-scripts', 'pilgrimirl_ajax', array(
