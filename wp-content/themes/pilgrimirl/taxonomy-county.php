@@ -55,7 +55,7 @@ $county_description = $current_term->description;
                     ));
                     
                     $ruin_count = get_posts(array(
-                        'post_type' => 'christian_ruin',
+                        'post_type' => 'christian_site',
                         'posts_per_page' => -1,
                         'tax_query' => array(
                             array(
@@ -78,7 +78,7 @@ $county_description = $current_term->description;
                     </div>
                     <div class="stat-item">
                         <span class="stat-number"><?php echo count($ruin_count); ?></span>
-                        <span class="stat-label">Christian Ruins</span>
+                        <span class="stat-label">Christian Sites</span>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@ $county_description = $current_term->description;
                 <button class="filter-tab active" data-type="all">All Sites</button>
                 <button class="filter-tab" data-type="monastic_site">Monastic Sites</button>
                 <button class="filter-tab" data-type="pilgrimage_route">Pilgrimage Routes</button>
-                <button class="filter-tab" data-type="christian_ruin">Christian Ruins</button>
+                <button class="filter-tab" data-type="christian_site">Christian Sites</button>
             </div>
         </div>
     </section>
@@ -104,7 +104,7 @@ $county_description = $current_term->description;
                 <?php
                 // Get all content for this county
                 $args = array(
-                    'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_ruin'),
+                    'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_site'),
                     'posts_per_page' => 20,
                     'post_status' => 'publish',
                     'orderby' => 'title',
@@ -132,7 +132,7 @@ $county_description = $current_term->description;
                         $post_type_labels = array(
                             'monastic_site' => 'Monastic Site',
                             'pilgrimage_route' => 'Pilgrimage Route',
-                            'christian_ruin' => 'Christian Ruin'
+                            'christian_site' => 'Christian Site'
                         );
                         $post_type_label = $post_type_labels[$post_type] ?? $post_type;
                         ?>

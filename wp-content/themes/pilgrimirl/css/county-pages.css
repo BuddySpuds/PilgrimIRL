@@ -471,7 +471,7 @@
     background: var(--secondary-color);
 }
 
-.site-card[data-type="christian_ruin"] .post-type-label {
+.site-card[data-type="christian_site"] .post-type-label {
     background: var(--accent-color);
 }
 

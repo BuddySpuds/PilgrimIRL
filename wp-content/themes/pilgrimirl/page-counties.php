@@ -29,11 +29,11 @@ get_header(); ?>
                     // Get count of sites in this county
                     $site_count = wp_count_posts('monastic_site');
                     $route_count = wp_count_posts('pilgrimage_route');
-                    $ruin_count = wp_count_posts('christian_ruin');
+                    $ruin_count = wp_count_posts('christian_site');
                     
                     // Get posts for this county
                     $county_posts = get_posts(array(
-                        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_ruin'),
+                        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_site'),
                         'posts_per_page' => -1,
                         'tax_query' => array(
                             array(
@@ -77,7 +77,7 @@ get_header(); ?>
                                         case 'pilgrimage_route':
                                             $route_count++;
                                             break;
-                                        case 'christian_ruin':
+                                        case 'christian_site':
                                             $ruin_count++;
                                             break;
                                     }
@@ -93,7 +93,7 @@ get_header(); ?>
                                 <?php endif; ?>
                                 
                                 <?php if ($ruin_count > 0) : ?>
-                                    <span class="site-type ruins"><?php echo $ruin_count; ?> Christian Ruins</span>
+                                    <span class="site-type ruins"><?php echo $ruin_count; ?> Christian Sites</span>
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -128,7 +128,7 @@ get_header(); ?>
                 <button class="filter-btn active" data-filter="all">All Sites</button>
                 <button class="filter-btn" data-filter="monastic_site">Monastic Sites</button>
                 <button class="filter-btn" data-filter="pilgrimage_route">Pilgrimage Routes</button>
-                <button class="filter-btn" data-filter="christian_ruin">Christian Ruins</button>
+                <button class="filter-btn" data-filter="christian_site">Christian Sites</button>
             </div>
         </section>
     </div>

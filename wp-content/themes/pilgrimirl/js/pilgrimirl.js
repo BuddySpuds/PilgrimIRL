@@ -14,6 +14,9 @@
         initCountyCards();
         initScrollAnimations();
         initAccessibility();
+        initBackToTop();
+        initPlaceholderImages();
+        initLoadingStates();
     });
 
     /**
@@ -191,7 +194,7 @@
             const labels = {
                 'monastic_site': 'Monastic Site',
                 'pilgrimage_route': 'Pilgrimage Route',
-                'christian_ruin': 'Christian Ruin'
+                'christian_site': 'Christian Site'
             };
             return labels[postType] || postType;
         }
@@ -415,6 +418,125 @@
         console.error('PilgrimIRL Theme Error:', e.error);
         // In production, you might want to send this to an error tracking service
     });
+
+    /**
+     * Back to Top Button
+     */
+    function initBackToTop() {
+        // Create the button element
+        const backToTopBtn = $('<button>', {
+            'class': 'back-to-top-btn',
+            'aria-label': 'Back to top',
+            'title': 'Back to top',
+            'html': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>'
+        });
+
+        $('body').append(backToTopBtn);
+
+        // Show/hide based on scroll position
+        $(window).on('scroll', debounce(function() {
+            if ($(this).scrollTop() > 300) {
+                backToTopBtn.addClass('visible');
+            } else {
+                backToTopBtn.removeClass('visible');
+            }
+        }, 100));
+
+        // Scroll to top on click
+        backToTopBtn.on('click', function() {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 500, 'swing');
+
+            // Announce to screen readers
+            if (window.announceToScreenReader) {
+                window.announceToScreenReader('Scrolled to top of page');
+            }
+        });
+    }
+
+    /**
+     * Placeholder Images for Missing Thumbnails
+     */
+    function initPlaceholderImages() {
+        // Add placeholder to cards without images
+        $('.site-card, .county-card, .feature-card, .result-card').each(function() {
+            const $card = $(this);
+            const $imageContainer = $card.find('.card-image');
+
+            if ($imageContainer.length === 0 || $imageContainer.find('img').length === 0) {
+                // Check if there's supposed to be an image container
+                if (!$card.hasClass('no-image')) {
+                    const placeholder = $('<div>', {
+                        'class': 'card-image-placeholder',
+                        'html': '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg><span>Image unavailable</span>'
+                    });
+
+                    if ($imageContainer.length > 0) {
+                        $imageContainer.append(placeholder);
+                    }
+                }
+            }
+        });
+
+        // Handle broken images
+        $('img').on('error', function() {
+            const $img = $(this);
+            const $parent = $img.parent();
+
+            // Don't replace if already has placeholder
+            if (!$parent.find('.image-error-placeholder').length) {
+                $img.hide();
+                $parent.append($('<div>', {
+                    'class': 'image-error-placeholder',
+                    'html': '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="3" x2="21" y2="21"/></svg>'
+                }));
+            }
+        });
+    }
+
+    /**
+     * Loading States Management
+     */
+    function initLoadingStates() {
+        // Enhance search loading with better spinner
+        const searchLoading = $('#search-loading');
+        if (searchLoading.length) {
+            searchLoading.html('<div class="loading-spinner"></div><p>Searching sacred sites...</p>');
+        }
+
+        // Add skeleton loading to results container
+        const resultsContainer = $('#pilgrim-results');
+        if (resultsContainer.length && resultsContainer.text().trim() === '') {
+            showSkeletonLoading(resultsContainer, 6);
+        }
+    }
+
+    /**
+     * Show skeleton loading cards
+     */
+    function showSkeletonLoading(container, count) {
+        container.empty();
+
+        for (let i = 0; i < count; i++) {
+            const skeleton = $('<div>', {
+                'class': 'skeleton-card',
+                'html': `
+                    <div class="skeleton-image skeleton-pulse"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-title skeleton-pulse"></div>
+                        <div class="skeleton-meta skeleton-pulse"></div>
+                        <div class="skeleton-text skeleton-pulse"></div>
+                        <div class="skeleton-text short skeleton-pulse"></div>
+                    </div>
+                `
+            });
+            container.append(skeleton);
+        }
+    }
+
+    // Expose skeleton loading for external use
+    window.showSkeletonLoading = showSkeletonLoading;
 
 })(jQuery);
 

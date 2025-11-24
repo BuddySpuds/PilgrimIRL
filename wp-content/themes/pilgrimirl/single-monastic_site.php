@@ -146,7 +146,7 @@ get_header(); ?>
                             <!-- Related Sites -->
                             <?php
                             $related_sites = new WP_Query(array(
-                                'post_type' => array('monastic_site', 'christian_ruin'),
+                                'post_type' => array('monastic_site', 'christian_site'),
                                 'posts_per_page' => 4,
                                 'post__not_in' => array(get_the_ID()),
                                 'tax_query' => array(
@@ -303,8 +303,8 @@ get_header(); ?>
                                         🚶‍♂️ Pilgrimage Routes
                                     </a>
                                     
-                                    <a href="<?php echo get_post_type_archive_link('christian_ruin'); ?>" class="nav-link">
-                                        ⛪ Christian Ruins
+                                    <a href="<?php echo get_post_type_archive_link('christian_site'); ?>" class="nav-link">
+                                        ⛪ Christian Sites
                                     </a>
                                 </div>
                             </div>

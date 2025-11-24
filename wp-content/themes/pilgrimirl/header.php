@@ -83,8 +83,8 @@ function pilgrimirl_fallback_menu() {
         echo '<li><a href="' . esc_url(get_post_type_archive_link('pilgrimage_route')) . '">Pilgrimage Routes</a></li>';
     }
     
-    if (post_type_exists('christian_ruin')) {
-        echo '<li><a href="' . esc_url(get_post_type_archive_link('christian_ruin')) . '">Christian Ruins</a></li>';
+    if (post_type_exists('christian_site')) {
+        echo '<li><a href="' . esc_url(get_post_type_archive_link('christian_site')) . '">Christian Sites</a></li>';
     }
     
     // Counties page

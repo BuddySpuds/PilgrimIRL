@@ -172,13 +172,13 @@
     color: white;
 }
 
-.filter-btn[data-type="christian_ruin"] {
+.filter-btn[data-type="christian_site"] {
     border-color: #795548;
     color: #795548;
 }
 
-.filter-btn[data-type="christian_ruin"]:hover,
-.filter-btn[data-type="christian_ruin"].active {
+.filter-btn[data-type="christian_site"]:hover,
+.filter-btn[data-type="christian_site"].active {
     background: #795548;
     border-color: #795548;
     color: white;

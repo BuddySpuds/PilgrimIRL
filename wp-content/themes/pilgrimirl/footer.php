@@ -45,7 +45,7 @@
                         <ul class="footer-links">
                             <li><a href="<?php echo get_post_type_archive_link('monastic_site'); ?>">Monastic Sites</a></li>
                             <li><a href="<?php echo get_post_type_archive_link('pilgrimage_route'); ?>">Pilgrimage Routes</a></li>
-                            <li><a href="<?php echo get_post_type_archive_link('christian_ruin'); ?>">Christian Ruins</a></li>
+                            <li><a href="<?php echo get_post_type_archive_link('christian_site'); ?>">Christian Sites</a></li>
                             <li><a href="/interactive-map">Interactive Map</a></li>
                             <li><a href="/blog">Blog</a></li>
                             <li><a href="/community">Community Forum</a></li>
