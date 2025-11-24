@@ -1,0 +1,105 @@
+# WordPress .gitignore
+# For PilgrimIRL WordPress Directory Site
+
+# WordPress Core Files
+/wp-admin/
+/wp-includes/
+/wp-*.php
+/xmlrpc.php
+/license.txt
+/readme.html
+
+# WordPress Config (NEVER commit sensitive data)
+wp-config.php
+wp-config-local.php
+.htaccess
+
+# WordPress Uploads (too large, should be backed up separately)
+/wp-content/uploads/
+/wp-content/upgrade/
+/wp-content/backup-db/
+/wp-content/backups/
+/wp-content/blogs.dir/
+/wp-content/cache/
+
+# WordPress Plugins (commit custom plugins only)
+/wp-content/plugins/akismet/
+/wp-content/plugins/hello.php
+# Add third-party plugins here
+
+# WordPress Themes (commit custom themes only)
+/wp-content/themes/twenty*/
+# Keep our custom theme:
+# !/wp-content/themes/pilgrimirl/
+
+# Logs and Databases
+*.log
+*.sql
+*.sqlite
+/logs/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*~
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.sublime-project
+.sublime-workspace
+
+# Node and Package Managers
+node_modules/
+npm-debug.log
+yarn-error.log
+/vendor/
+composer.lock (optional - keep if you want reproducible builds)
+
+# Build Files
+/dist/
+/build/
+*.min.css
+*.min.js
+*.map
+
+# Environment Files
+.env
+.env.local
+.env.production
+
+# Temporary Files
+/tmp/
+/temp/
+*.tmp
+*.bak
+*.backup
+
+# Local by Flywheel Specific
+/logs/
+/conf/
+
+# Debug and Test Files
+/wp-content/themes/pilgrimirl/debug-*.php
+/wp-content/themes/pilgrimirl/test-*.php
+/wp-content/themes/pilgrimirl/verify-*.php
+/wp-content/themes/pilgrimirl/check-*.php
+/wp-content/themes/pilgrimirl/simple-*.php
+
+# Large Data Files (should be documented separately)
+/MonasticSites_JSON/
+/PilgrimageRoutes_JSON/
+*.json (if you want to exclude all JSON - be careful with package.json)
+
+# Keep These Files (Override exclusions)
+!package.json
+!composer.json
+!.gitkeep
