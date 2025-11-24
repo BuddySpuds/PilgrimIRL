@@ -67,9 +67,11 @@ composer.lock (optional - keep if you want reproducible builds)
 # Build Files
 /dist/
 /build/
-*.min.css
-*.min.js
 *.map
+
+# Allow minified assets (commit for deployment)
+# *.min.css
+# *.min.js
 
 # Environment Files
 .env
@@ -97,7 +99,7 @@ composer.lock (optional - keep if you want reproducible builds)
 # Large Data Files (should be documented separately)
 /MonasticSites_JSON/
 /PilgrimageRoutes_JSON/
-*.json (if you want to exclude all JSON - be careful with package.json)
+# Note: Keep package.json, but exclude large data JSON files
 
 # Keep These Files (Override exclusions)
 !package.json
