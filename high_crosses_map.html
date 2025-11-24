@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Irish High Crosses Map</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        .info-window {
+            max-width: 300px;
+        }
+        .info-window h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .info-window p {
+            margin-bottom: 5px;
+        }
+        .header {
+            background-color: #4285F4;
+            color: white;
+            padding: 10px 15px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Irish High Crosses Map</h1>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        // Initialize the map
+        function initMap() {
+            // Center the map on Ireland
+            const map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                center: { lat: 53.4, lng: -7.9 }
+            });
+
+            // Load the high crosses data
+            fetch('high_crosses.json')
+                .then(response => response.json())
+                .then(data => {
+                    // Create an info window to share between markers
+                    const infoWindow = new google.maps.InfoWindow();
+
+                    // Add markers for each high cross
+                    data.high_crosses.forEach(cross => {
+                        const marker = new google.maps.Marker({
+                            position: { lat: cross.coordinates.lat, lng: cross.coordinates.lng },
+                            map: map,
+                            title: cross.name,
+                            animation: google.maps.Animation.DROP
+                        });
+
+                        // Add click listener to open info window
+                        marker.addListener('click', () => {
+                            const content = `
+                                <div class="info-window">
+                                    <h3>${cross.name} High Cross</h3>
+                                    <p><strong>County:</strong> ${cross.county}</p>
+                                    <p><strong>Coordinates:</strong> ${cross.coordinates.lat.toFixed(6)}, ${cross.coordinates.lng.toFixed(6)}</p>
+                                </div>
+                            `;
+                            infoWindow.setContent(content);
+                            infoWindow.open(map, marker);
+                        });
+                    });
+                })
+                .catch(error => console.error('Error loading high crosses data:', error));
+        }
+    </script>
+
+    <!-- Load the Google Maps JavaScript API -->
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap" async defer></script>
+</body>
+</html>
