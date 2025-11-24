@@ -1,0 +1,474 @@
+/**
+ * Homepage Filter Buttons Styling
+ * Similar to the trending projects design you showed
+ */
+
+.pilgrim-filters-section {
+    background: #f8f9fa;
+    padding: 40px 0;
+    margin: 40px 0;
+}
+
+.pilgrim-filters-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.pilgrim-filters-title {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    letter-spacing: -0.02em;
+}
+
+.pilgrim-filters-subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Filter Button Groups */
+.filter-group {
+    margin-bottom: 30px;
+}
+
+.filter-group-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* Filter Dropdown */
+.filter-dropdown {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.filter-select {
+    background: #ffffff;
+    border: 2px solid #e1e8ed;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #5a6c7d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    max-width: 300px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 16px;
+    padding-right: 45px;
+}
+
+.filter-select:hover {
+    background-color: #f1f3f4;
+    border-color: #3498db;
+    color: #2c3e50;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.filter-btn {
+    background: #ffffff;
+    border: 2px solid #e1e8ed;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #5a6c7d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn:hover {
+    background: #f1f3f4;
+    border-color: #3498db;
+    color: #2c3e50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.filter-btn.active {
+    background: #6b8e23;
+    border-color: #6b8e23;
+    color: white;
+    box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
+}
+
+.filter-btn.active:hover {
+    background: #5a7a1f;
+    border-color: #5a7a1f;
+    transform: translateY(-2px);
+}
+
+/* Post Type Buttons - Different Colors */
+.filter-btn[data-type="all"] {
+    background: #34495e;
+    border-color: #34495e;
+    color: white;
+}
+
+.filter-btn[data-type="all"]:hover,
+.filter-btn[data-type="all"].active {
+    background: #2c3e50;
+    border-color: #2c3e50;
+}
+
+.filter-btn[data-type="monastic_site"] {
+    border-color: #8B4513;
+    color: #8B4513;
+}
+
+.filter-btn[data-type="monastic_site"]:hover,
+.filter-btn[data-type="monastic_site"].active {
+    background: #8B4513;
+    border-color: #8B4513;
+    color: white;
+}
+
+.filter-btn[data-type="pilgrimage_route"] {
+    border-color: #2E7D32;
+    color: #2E7D32;
+}
+
+.filter-btn[data-type="pilgrimage_route"]:hover,
+.filter-btn[data-type="pilgrimage_route"].active {
+    background: #2E7D32;
+    border-color: #2E7D32;
+    color: white;
+}
+
+.filter-btn[data-type="christian_ruin"] {
+    border-color: #795548;
+    color: #795548;
+}
+
+.filter-btn[data-type="christian_ruin"]:hover,
+.filter-btn[data-type="christian_ruin"].active {
+    background: #795548;
+    border-color: #795548;
+    color: white;
+}
+
+/* Results Section */
+.pilgrim-results-section {
+    padding: 40px 0;
+}
+
+.pilgrim-results-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.results-count {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    color: #7f8c8d;
+}
+
+.results-count strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 10px;
+}
+
+.view-btn {
+    background: #ffffff;
+    border: 2px solid #e1e8ed;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: #5a6c7d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.view-btn:hover,
+.view-btn.active {
+    background: #3498db;
+    border-color: #3498db;
+    color: white;
+}
+
+/* Results Grid */
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.result-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid #e1e8ed;
+}
+
+.result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.result-card-image {
+    height: 180px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.result-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.result-card-type {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.result-card-content {
+    padding: 20px;
+}
+
+.result-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.result-card-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.result-card-title a:hover {
+    color: #3498db;
+}
+
+.result-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.result-card-county {
+    background: #ecf0f1;
+    color: #5a6c7d;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.result-card-excerpt {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+.result-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.result-card-link {
+    background: #3498db;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.result-card-link:hover {
+    background: #2980b9;
+}
+
+.result-card-map-btn {
+    background: none;
+    border: 2px solid #e1e8ed;
+    color: #5a6c7d;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.result-card-map-btn:hover {
+    border-color: #3498db;
+    color: #3498db;
+}
+
+/* Results List View */
+.results-list .result-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+}
+
+.results-list .result-card-image {
+    width: 120px;
+    height: 80px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.results-list .result-card-content {
+    flex: 1;
+    padding: 0;
+}
+
+/* Loading State */
+.results-loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e1e8ed;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pilgrim-filters-title {
+        font-size: 2rem;
+    }
+    
+    .filter-buttons {
+        gap: 8px;
+    }
+    
+    .filter-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .filter-select {
+        min-width: 150px;
+        max-width: 250px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .results-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .results-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .results-list .result-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .results-list .result-card-image {
+        width: 100%;
+        height: 180px;
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pilgrim-filters-container,
+    .pilgrim-results-container {
+        padding: 0 15px;
+    }
+    
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .filter-select {
+        min-width: 120px;
+        max-width: 200px;
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+}

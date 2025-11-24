@@ -1,0 +1,25 @@
+{
+  "name": "pilgrimirl-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end and UI/UX tests for PilgrimIRL theme",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:chrome": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:safari": "playwright test --project=webkit",
+    "test:mobile": "playwright test --project=mobile",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen http://localhost:10028"
+  },
+  "keywords": ["e2e", "testing", "playwright", "wordpress"],
+  "author": "PilgrimIRL Team",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@axe-core/playwright": "^4.8.2"
+  }
+}

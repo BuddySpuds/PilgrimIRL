@@ -1,0 +1,380 @@
+{
+  "high_crosses": [
+    {
+      "name": "Ahenny",
+      "county": "Tipperary",
+      "coordinates": {
+        "lat": 52.4141611,
+        "lng": -7.392554199999999
+      }
+    },
+    {
+      "name": "Ardboe",
+      "county": "Tyrone",
+      "coordinates": {
+        "lat": 54.62068000000001,
+        "lng": -6.51139
+      }
+    },
+    {
+      "name": "Bealin",
+      "county": "Westmeath",
+      "coordinates": {
+        "lat": 53.4337623,
+        "lng": -7.8419921
+      }
+    },
+    {
+      "name": "Boho",
+      "county": "Fermanagh",
+      "coordinates": {
+        "lat": 54.333094,
+        "lng": -7.79143
+      }
+    },
+    {
+      "name": "Carndonagh",
+      "county": "Donegal",
+      "coordinates": {
+        "lat": 55.2506229,
+        "lng": -7.266890500000001
+      }
+    },
+    {
+      "name": "Cashel",
+      "county": "Tipperary",
+      "coordinates": {
+        "lat": 52.51590969999999,
+        "lng": -7.8915829
+      }
+    },
+    {
+      "name": "Castledermot",
+      "county": "Kildare",
+      "coordinates": {
+        "lat": 52.9118755,
+        "lng": -6.837567
+      }
+    },
+    {
+      "name": "Castlekeeran",
+      "county": "Meath",
+      "coordinates": {
+        "lat": 53.7387925,
+        "lng": -6.9580728
+      }
+    },
+    {
+      "name": "Clogher",
+      "county": "Tyrone",
+      "coordinates": {
+        "lat": 54.4143001,
+        "lng": -7.1645201
+      }
+    },
+    {
+      "name": "Clonca",
+      "county": "Donegal",
+      "coordinates": {
+        "lat": 55.2721157,
+        "lng": -7.1826543
+      }
+    },
+    {
+      "name": "Clones",
+      "county": "Monaghan",
+      "coordinates": {
+        "lat": 54.1796829,
+        "lng": -7.230667100000001
+      }
+    },
+    {
+      "name": "Clonmacnois",
+      "county": "Offaly",
+      "coordinates": {
+        "lat": 53.3264261,
+        "lng": -7.9843391
+      }
+    },
+    {
+      "name": "Devenish Island",
+      "county": "Fermanagh",
+      "coordinates": {
+        "lat": 54.3709251,
+        "lng": -7.657869100000001
+      }
+    },
+    {
+      "name": "Donaghmore",
+      "county": "Tyrone",
+      "coordinates": {
+        "lat": 54.5311101,
+        "lng": -6.81305
+      }
+    },
+    {
+      "name": "Downpatrick",
+      "county": "Down",
+      "coordinates": {
+        "lat": 54.32875139999999,
+        "lng": -5.715692199999999
+      }
+    },
+    {
+      "name": "Dromiskin",
+      "county": "Louth",
+      "coordinates": {
+        "lat": 53.9217123,
+        "lng": -6.401009200000001
+      }
+    },
+    {
+      "name": "Drumcliffe",
+      "county": "Sligo",
+      "coordinates": {
+        "lat": 54.33047,
+        "lng": -8.50147
+      }
+    },
+    {
+      "name": "Duleek",
+      "county": "Meath",
+      "coordinates": {
+        "lat": 53.6547501,
+        "lng": -6.4221752
+      }
+    },
+    {
+      "name": "Durrow",
+      "county": "Offaly",
+      "coordinates": {
+        "lat": 53.3282,
+        "lng": -7.52879
+      }
+    },
+    {
+      "name": "Dysert O'Dea",
+      "county": "Clare",
+      "coordinates": {
+        "lat": 52.91131,
+        "lng": -9.0617
+      }
+    },
+    {
+      "name": "Fahan Mura",
+      "county": "Donegal",
+      "coordinates": {
+        "lat": 55.0832256,
+        "lng": -7.460680399999999
+      }
+    },
+    {
+      "name": "Fennor",
+      "county": "Meath",
+      "coordinates": {
+        "lat": 53.6217547,
+        "lng": -6.3978477
+      }
+    },
+    {
+      "name": "Finglas",
+      "county": "Dublin",
+      "coordinates": {
+        "lat": 53.390325,
+        "lng": -6.298400699999999
+      }
+    },
+    {
+      "name": "Galloon",
+      "county": "Fermanagh",
+      "coordinates": {
+        "lat": 54.1574094,
+        "lng": -7.4044181
+      }
+    },
+    {
+      "name": "Glendalough",
+      "county": "Wicklow",
+      "coordinates": {
+        "lat": 53.0112797,
+        "lng": -6.3261752
+      }
+    },
+    {
+      "name": "Graiguenamanagh",
+      "county": "Kilkenny",
+      "coordinates": {
+        "lat": 52.54406160000001,
+        "lng": -6.959308999999999
+      }
+    },
+    {
+      "name": "Kells",
+      "county": "Meath",
+      "coordinates": {
+        "lat": 53.72718030000001,
+        "lng": -6.876972299999999
+      }
+    },
+    {
+      "name": "Kilbroney",
+      "county": "Down",
+      "coordinates": {
+        "lat": 54.096363,
+        "lng": -6.1935525
+      }
+    },
+    {
+      "name": "Kilfenora",
+      "county": "Clare",
+      "coordinates": {
+        "lat": 52.9899429,
+        "lng": -9.218327
+      }
+    },
+    {
+      "name": "Kilgobbin",
+      "county": "Dublin",
+      "coordinates": {
+        "lat": 53.2573762,
+        "lng": -6.2113953
+      }
+    },
+    {
+      "name": "Kilkieran",
+      "county": "Kilkenny",
+      "coordinates": {
+        "lat": 52.7012696,
+        "lng": -7.200626400000001
+      }
+    },
+    {
+      "name": "Killaloe",
+      "county": "Clare",
+      "coordinates": {
+        "lat": 52.808886,
+        "lng": -8.4475152
+      }
+    },
+    {
+      "name": "Killamery",
+      "county": "Kilkenny",
+      "coordinates": {
+        "lat": 52.4712815,
+        "lng": -7.4468038
+      }
+    },
+    {
+      "name": "Killary",
+      "county": "Meath",
+      "coordinates": {
+        "lat": 53.7776467,
+        "lng": -6.6585033
+      }
+    },
+    {
+      "name": "Kilmokea",
+      "county": "Wexford",
+      "coordinates": {
+        "lat": 52.2959971,
+        "lng": -6.9929773
+      }
+    },
+    {
+      "name": "Kilree",
+      "county": "Kilkenny",
+      "coordinates": {
+        "lat": 52.5987127,
+        "lng": -7.2086783
+      }
+    },
+    {
+      "name": "Kinnitty",
+      "county": "Offaly",
+      "coordinates": {
+        "lat": 53.097806,
+        "lng": -7.7189969
+      }
+    },
+    {
+      "name": "Lisnaskea",
+      "county": "Fermanagh",
+      "coordinates": {
+        "lat": 54.2528935,
+        "lng": -7.442869600000001
+      }
+    },
+    {
+      "name": "Lorrha",
+      "county": "Tipperary",
+      "coordinates": {
+        "lat": 53.0931067,
+        "lng": -8.1228038
+      }
+    },
+    {
+      "name": "Monaincha",
+      "county": "Tipperary",
+      "coordinates": {
+        "lat": 52.9424682,
+        "lng": -7.732074799999999
+      }
+    },
+    {
+      "name": "Monasterboice",
+      "county": "Louth",
+      "coordinates": {
+        "lat": 53.7875134,
+        "lng": -6.4163004
+      }
+    },
+    {
+      "name": "Moone",
+      "county": "Kildare",
+      "coordinates": {
+        "lat": 52.9755328,
+        "lng": -6.815702
+      }
+    },
+    {
+      "name": "Old Kilcullen",
+      "county": "Kildare",
+      "coordinates": {
+        "lat": 53.10917999999999,
+        "lng": -6.766070000000001
+      }
+    },
+    {
+      "name": "Roscrea",
+      "county": "Tipperary",
+      "coordinates": {
+        "lat": 52.9551789,
+        "lng": -7.798469600000001
+      }
+    },
+    {
+      "name": "St Mullins",
+      "county": "Carlow",
+      "coordinates": {
+        "lat": 52.4911459,
+        "lng": -6.9297738
+      }
+    },
+    {
+      "name": "Termonfeckin",
+      "county": "Louth",
+      "coordinates": {
+        "lat": 53.76101389999999,
+        "lng": -6.271843199999999
+      }
+    },
+    {
+      "name": "Ullard",
+      "county": "Kilkenny",
+      "coordinates": {
+        "lat": 52.79525,
+        "lng": -7.07193
+      }
+    }
+  ]
+}
