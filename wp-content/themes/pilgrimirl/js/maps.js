@@ -336,6 +336,139 @@ jQuery(document).ready(function($) {
     });
 });
 
+/**
+ * Global function to update homepage map with filtered sites
+ * Called from homepage-filters.js
+ */
+function updateHomepageMap(sites) {
+    const mapElement = document.getElementById('pilgrim-main-map');
+    if (!mapElement) return;
+
+    // Initialize map if not already done
+    if (!pilgrimMaps.archiveMap) {
+        if (typeof google === 'undefined' || !google.maps) {
+            console.log('PilgrimIRL: Google Maps not available for homepage map');
+            return;
+        }
+
+        pilgrimMaps.archiveMap = new google.maps.Map(mapElement, {
+            center: { lat: 53.1424, lng: -7.6921 },
+            zoom: 7,
+            styles: [
+                {
+                    featureType: 'poi',
+                    elementType: 'labels',
+                    stylers: [{ visibility: 'off' }]
+                }
+            ]
+        });
+    }
+
+    // Clear existing markers
+    pilgrimMaps.markers.forEach(marker => marker.setMap(null));
+    pilgrimMaps.markers = [];
+
+    // Add markers for filtered sites
+    const bounds = new google.maps.LatLngBounds();
+    let hasValidCoords = false;
+
+    sites.forEach(site => {
+        if (site.latitude && site.longitude) {
+            hasValidCoords = true;
+            const position = { lat: parseFloat(site.latitude), lng: parseFloat(site.longitude) };
+            bounds.extend(position);
+
+            const marker = new google.maps.Marker({
+                position: position,
+                map: pilgrimMaps.archiveMap,
+                title: site.title,
+                icon: {
+                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+                        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10" fill="#2c5530" stroke="white" stroke-width="2"/>
+                            <text x="12" y="16" text-anchor="middle" fill="white" font-size="12" font-weight="bold">✝</text>
+                        </svg>
+                    `),
+                    scaledSize: new google.maps.Size(24, 24)
+                }
+            });
+
+            // Create info window
+            const countyText = site.county && site.county.length > 0 ? `<p style="margin: 0 0 8px 0; font-size: 0.9rem; color: #666;">County: ${site.county[0]}</p>` : '';
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                    <div style="max-width: 250px;">
+                        <h4 style="margin: 0 0 8px 0; color: #2c5530;">
+                            <a href="${site.permalink}" style="color: #2c5530; text-decoration: none;">${site.title}</a>
+                        </h4>
+                        ${countyText}
+                        ${site.excerpt ? `<p style="margin: 0; font-size: 0.9rem;">${site.excerpt}</p>` : ''}
+                        <p style="margin: 8px 0 0 0;">
+                            <a href="${site.permalink}" style="color: #2c5530; font-weight: 500;">Learn More →</a>
+                        </p>
+                    </div>
+                `
+            });
+
+            marker.addListener('click', () => {
+                infoWindow.open(pilgrimMaps.archiveMap, marker);
+            });
+
+            pilgrimMaps.markers.push(marker);
+        }
+    });
+
+    // Fit bounds if we have markers
+    if (hasValidCoords && pilgrimMaps.markers.length > 0) {
+        pilgrimMaps.archiveMap.fitBounds(bounds);
+
+        // Don't zoom in too much for single markers
+        if (pilgrimMaps.markers.length === 1) {
+            pilgrimMaps.archiveMap.setZoom(12);
+        }
+    } else {
+        // Reset to Ireland view if no valid coordinates
+        pilgrimMaps.archiveMap.setCenter({ lat: 53.1424, lng: -7.6921 });
+        pilgrimMaps.archiveMap.setZoom(7);
+    }
+
+    console.log('PilgrimIRL: Updated homepage map with', pilgrimMaps.markers.length, 'markers');
+}
+
+/**
+ * Show specific site on map (global function for "Show on Map" buttons)
+ */
+function showOnMap(button) {
+    const lat = parseFloat(button.getAttribute('data-lat') || button.dataset.lat);
+    const lng = parseFloat(button.getAttribute('data-lng') || button.dataset.lng);
+
+    if (isNaN(lat) || isNaN(lng)) return;
+
+    // Find the map section and scroll to it
+    const mapSection = document.querySelector('.map-section, #pilgrim-main-map, #saints-map');
+    if (mapSection) {
+        mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Center the map on the location
+    if (pilgrimMaps.archiveMap) {
+        pilgrimMaps.archiveMap.setCenter({ lat: lat, lng: lng });
+        pilgrimMaps.archiveMap.setZoom(14);
+
+        // Find and trigger click on the marker
+        const targetMarker = pilgrimMaps.markers.find(marker => {
+            const pos = marker.getPosition();
+            return Math.abs(pos.lat() - lat) < 0.0001 && Math.abs(pos.lng() - lng) < 0.0001;
+        });
+
+        if (targetMarker) {
+            google.maps.event.trigger(targetMarker, 'click');
+        }
+    }
+}
+
 // Make functions globally available
 window.initPilgrimMaps = initPilgrimMaps;
 window.showSiteOnArchiveMap = showSiteOnArchiveMap;
+window.updateHomepageMap = updateHomepageMap;
+window.showOnMap = showOnMap;

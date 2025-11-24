@@ -62,6 +62,11 @@ function pilgrimirl_enqueue_styles() {
     wp_enqueue_style('pilgrimirl-footer', pilgrimirl_asset('css/footer.css'), array('pilgrimirl-style'), $version);
     wp_enqueue_style('pilgrimirl-homepage-filters', pilgrimirl_asset('css/homepage-filters.css'), array('pilgrimirl-style'), $version);
 
+    // Saints page CSS
+    if (is_page_template('page-saints.php') || is_page('saints')) {
+        wp_enqueue_style('pilgrimirl-saints-page', pilgrimirl_asset('css/saints-page.css'), array('pilgrimirl-style'), $version);
+    }
+
     // Enqueue Google Fonts
     wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap', array(), null);
 
@@ -70,6 +75,11 @@ function pilgrimirl_enqueue_styles() {
     wp_enqueue_script('pilgrimirl-scripts', pilgrimirl_asset('js/pilgrimirl.js'), array('jquery', 'pilgrimirl-debug'), $version, true);
     wp_enqueue_script('pilgrimirl-maps', pilgrimirl_asset('js/maps.js'), array('jquery', 'pilgrimirl-debug'), $version, true);
     wp_enqueue_script('pilgrimirl-homepage-filters', pilgrimirl_asset('js/homepage-filters.js'), array('jquery', 'pilgrimirl-debug'), $version, true);
+
+    // Saints page JavaScript
+    if (is_page_template('page-saints.php') || is_page('saints')) {
+        wp_enqueue_script('pilgrimirl-saints-page', pilgrimirl_asset('js/saints-page-filters.js'), array('jquery', 'pilgrimirl-maps'), $version, true);
+    }
     
     // Localize script for AJAX
     wp_localize_script('pilgrimirl-scripts', 'pilgrimirl_ajax', array(
@@ -87,7 +97,7 @@ function pilgrimirl_enqueue_google_maps() {
     $api_key = get_option('pilgrimirl_google_maps_api_key', '');
     
     // Only load maps on relevant pages
-    if (is_singular(array('monastic_site', 'pilgrimage_route', 'christian_site')) || is_front_page() || is_page('counties') || is_tax('county')) {
+    if (is_singular(array('monastic_site', 'pilgrimage_route', 'christian_site')) || is_front_page() || is_page('counties') || is_page('saints') || is_page_template('page-saints.php') || is_tax('county')) {
         
         // Only enqueue if we have a valid API key
         if (!empty($api_key)) {
@@ -1390,6 +1400,266 @@ function pilgrimirl_flush_rewrite_rules() {
     }
 }
 add_action('after_switch_theme', 'pilgrimirl_flush_rewrite_rules');
+
+/**
+ * ==========================================================================
+ * Saints Page Functions
+ * ==========================================================================
+ */
+
+/**
+ * Get saints with metadata for the saints page
+ * Returns array of saints with site counts and associated counties
+ */
+function pilgrimirl_get_saints_with_metadata() {
+    // Check for cached data first
+    $cached = get_transient('pilgrimirl_saints_metadata');
+    if ($cached !== false) {
+        return $cached;
+    }
+
+    $saints_data = array();
+    $saint_details = array();
+
+    // Get all posts
+    $posts = get_posts(array(
+        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_site'),
+        'posts_per_page' => -1,
+        'post_status' => 'publish'
+    ));
+
+    foreach ($posts as $post) {
+        $content = $post->post_content;
+        $title = $post->post_title;
+        $communities_provenance = get_post_meta($post->ID, '_pilgrimirl_communities_provenance', true);
+        $all_text = $content . ' ' . $title . ' ' . $communities_provenance;
+
+        // Get post counties
+        $post_counties = wp_get_post_terms($post->ID, 'county', array('fields' => 'names'));
+        if (is_wp_error($post_counties)) {
+            $post_counties = array();
+        }
+
+        // Extract saint names
+        $saint_patterns = array(
+            '/St\.?\s+([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i',
+            '/Saint\s+([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i',
+            '/founded\s+by\s+(?:St\.?\s+)?([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i'
+        );
+
+        $false_positives = array(
+            'times', 'until', 'after', 'before', 'during', 'within', 'about',
+            'church', 'abbey', 'monastery', 'priory', 'cathedral', 'chapel',
+            'house', 'order', 'rule', 'community', 'foundation', 'dissolution',
+            'century', 'period', 'time', 'year', 'date', 'early', 'late',
+            'well', 'cross', 'site', 'stone', 'holy', 'sacred'
+        );
+
+        $post_saints = array();
+        foreach ($saint_patterns as $pattern) {
+            if (preg_match_all($pattern, $all_text, $matches)) {
+                foreach ($matches[1] as $saint_name) {
+                    $saint_name = trim($saint_name);
+                    $saint_name_lower = strtolower($saint_name);
+
+                    if (strlen($saint_name) >= 3 &&
+                        strlen($saint_name) <= 20 &&
+                        !in_array($saint_name_lower, $false_positives) &&
+                        !preg_match('/\d/', $saint_name) &&
+                        !preg_match('/[^a-zA-Z\s]/', $saint_name)) {
+
+                        $saint_key = sanitize_title($saint_name);
+                        $post_saints[$saint_key] = $saint_name;
+                    }
+                }
+            }
+        }
+
+        // Aggregate saint data
+        foreach ($post_saints as $saint_key => $saint_name) {
+            if (!isset($saint_details[$saint_key])) {
+                $saint_details[$saint_key] = array(
+                    'name' => $saint_name,
+                    'site_count' => 0,
+                    'counties' => array(),
+                    'site_types' => array()
+                );
+            }
+            $saint_details[$saint_key]['site_count']++;
+
+            // Add counties
+            foreach ($post_counties as $county) {
+                if (!in_array($county, $saint_details[$saint_key]['counties'])) {
+                    $saint_details[$saint_key]['counties'][] = $county;
+                }
+            }
+
+            // Add site type
+            if (!in_array($post->post_type, $saint_details[$saint_key]['site_types'])) {
+                $saint_details[$saint_key]['site_types'][] = $post->post_type;
+            }
+        }
+    }
+
+    // Convert to array format and filter
+    foreach ($saint_details as $slug => $data) {
+        if ($data['site_count'] >= 2) {
+            $saints_data[] = array(
+                'slug' => $slug,
+                'name' => 'St. ' . $data['name'],
+                'site_count' => $data['site_count'],
+                'counties' => $data['counties'],
+                'site_types' => $data['site_types']
+            );
+        }
+    }
+
+    // Sort by count descending, then by name
+    usort($saints_data, function($a, $b) {
+        if ($a['site_count'] == $b['site_count']) {
+            return strcmp($a['name'], $b['name']);
+        }
+        return $b['site_count'] - $a['site_count'];
+    });
+
+    // Cache for 1 hour
+    set_transient('pilgrimirl_saints_metadata', $saints_data, HOUR_IN_SECONDS);
+
+    return $saints_data;
+}
+
+/**
+ * AJAX handler for getting all sites for the saints page
+ */
+function pilgrimirl_get_saints_page_sites() {
+    // Verify nonce
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'pilgrimirl_nonce')) {
+        wp_send_json_error('Invalid nonce');
+        return;
+    }
+
+    $sites = array();
+
+    $args = array(
+        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_site'),
+        'posts_per_page' => -1,
+        'post_status' => 'publish'
+    );
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            $post_id = get_the_ID();
+
+            // Get coordinates
+            $latitude = get_post_meta($post_id, '_pilgrimirl_latitude', true);
+            $longitude = get_post_meta($post_id, '_pilgrimirl_longitude', true);
+
+            // Get counties
+            $counties = wp_get_post_terms($post_id, 'county', array('fields' => 'names'));
+            if (is_wp_error($counties)) {
+                $counties = array();
+            }
+
+            // Extract saints from content
+            $saints = pilgrimirl_extract_saints_from_post_content($post_id);
+
+            // Get communities provenance for additional saint matching
+            $communities_provenance = get_post_meta($post_id, '_pilgrimirl_communities_provenance', true);
+
+            // Get thumbnail
+            $thumbnail = '';
+            if (has_post_thumbnail($post_id)) {
+                $thumbnail = get_the_post_thumbnail_url($post_id, 'medium');
+            }
+
+            $sites[] = array(
+                'id' => $post_id,
+                'title' => get_the_title(),
+                'excerpt' => wp_trim_words(get_the_excerpt(), 25, '...'),
+                'permalink' => get_permalink(),
+                'post_type' => get_post_type(),
+                'latitude' => $latitude ? floatval($latitude) : null,
+                'longitude' => $longitude ? floatval($longitude) : null,
+                'county' => $counties,
+                'saints' => $saints,
+                'communities_provenance' => $communities_provenance,
+                'thumbnail' => $thumbnail
+            );
+        }
+        wp_reset_postdata();
+    }
+
+    wp_send_json_success($sites);
+}
+add_action('wp_ajax_get_saints_page_sites', 'pilgrimirl_get_saints_page_sites');
+add_action('wp_ajax_nopriv_get_saints_page_sites', 'pilgrimirl_get_saints_page_sites');
+
+/**
+ * Extract saints from a specific post's content
+ */
+function pilgrimirl_extract_saints_from_post_content($post_id) {
+    $post = get_post($post_id);
+    if (!$post) return array();
+
+    $content = $post->post_content;
+    $title = $post->post_title;
+    $communities_provenance = get_post_meta($post_id, '_pilgrimirl_communities_provenance', true);
+    $all_text = $content . ' ' . $title . ' ' . $communities_provenance;
+
+    $saints = array();
+
+    $saint_patterns = array(
+        '/St\.?\s+([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i',
+        '/Saint\s+([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i',
+        '/founded\s+by\s+(?:St\.?\s+)?([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i'
+    );
+
+    $false_positives = array(
+        'times', 'until', 'after', 'before', 'during', 'within', 'about',
+        'church', 'abbey', 'monastery', 'priory', 'cathedral', 'chapel',
+        'house', 'order', 'rule', 'community', 'foundation', 'dissolution',
+        'century', 'period', 'time', 'year', 'date', 'early', 'late',
+        'well', 'cross', 'site', 'stone', 'holy', 'sacred'
+    );
+
+    foreach ($saint_patterns as $pattern) {
+        if (preg_match_all($pattern, $all_text, $matches)) {
+            foreach ($matches[1] as $saint_name) {
+                $saint_name = trim($saint_name);
+                $saint_name_lower = strtolower($saint_name);
+
+                if (strlen($saint_name) >= 3 &&
+                    strlen($saint_name) <= 20 &&
+                    !in_array($saint_name_lower, $false_positives) &&
+                    !preg_match('/\d/', $saint_name) &&
+                    !preg_match('/[^a-zA-Z\s]/', $saint_name)) {
+
+                    $formatted_name = 'St. ' . $saint_name;
+                    if (!in_array($formatted_name, $saints)) {
+                        $saints[] = $formatted_name;
+                    }
+                }
+            }
+        }
+    }
+
+    return $saints;
+}
+
+/**
+ * Clear saints cache when posts are updated
+ */
+function pilgrimirl_clear_saints_cache($post_id) {
+    $post_type = get_post_type($post_id);
+    if (in_array($post_type, array('monastic_site', 'pilgrimage_route', 'christian_site'))) {
+        delete_transient('pilgrimirl_saints_metadata');
+    }
+}
+add_action('save_post', 'pilgrimirl_clear_saints_cache');
+add_action('delete_post', 'pilgrimirl_clear_saints_cache');
 
 /**
  * Include data importer and utilities
