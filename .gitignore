@@ -1,0 +1,123 @@
+# ========================================
+# PilgrimIRL .gitignore
+# WordPress Project with Local by Flywheel
+# ========================================
+
+# ===== SECURITY - NEVER COMMIT =====
+.env
+.env.*
+!.env.example
+wp-config.php
+app/public/wp-config.php
+
+# SSH Keys & Credentials
+*.pem
+*.key
+*.crt
+id_rsa*
+*.ppk
+
+# ===== DEPLOYMENT =====
+deployment/
+*.sql
+*.sql.gz
+
+# ===== WORDPRESS CORE =====
+# We're tracking WP core for deployment, but exclude:
+app/public/wp-content/uploads/
+app/public/wp-content/upgrade/
+app/public/wp-content/backup-db/
+app/public/wp-content/backups/
+app/public/wp-content/cache/
+app/public/wp-content/ai1wm-backups/
+
+# Advanced Custom Fields Pro (if using)
+app/public/wp-content/plugins/advanced-custom-fields-pro/
+
+# ===== NODE & BUILD =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+build/
+*.min.js
+*.min.css
+!app/public/wp-content/themes/pilgrimirl/assets/**/*.min.*
+
+# ===== LOCAL BY FLYWHEEL =====
+local-*.log
+local-*.sql
+
+# ===== MACOS =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+
+# ===== WINDOWS =====
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===== IDE & EDITORS =====
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+.project
+
+# ===== LOGS =====
+*.log
+error_log
+debug.log
+php_error.log
+npm-debug.log
+yarn-error.log
+
+# ===== TEMPORARY & BACKUP FILES =====
+*.tmp
+*.temp
+*.backup
+*.bak
+*.old
+*.orig
+*~
+.~*
+
+# ===== WORDPRESS SPECIFICS =====
+# Debug logs
+app/public/wp-content/debug.log
+
+# Plugin/Theme zips (if downloaded)
+*.zip
+
+# Sitemap (usually generated)
+sitemap.xml
+sitemap.xml.gz
+
+# ===== TESTING =====
+.phpunit.result.cache
+/vendor/
+composer.lock
+
+# ===== DOCUMENTATION =====
+# Keep README and docs
+!README*.md
+!DEPLOYMENT*.md
+!CONTRIBUTING.md

@@ -1,0 +1,119 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for proper deployment
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli, mbstring, xml, zip
+          tools: wp-cli
+
+      - name: Install sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass rsync
+
+      - name: Export Database from Staging (Optional)
+        if: false  # Set to true if you want to deploy database changes
+        run: |
+          # This would export from your staging database
+          # Not needed for theme/plugin updates only
+          echo "Skipping database export - theme/files deployment only"
+
+      - name: Deploy Files to Hostinger via rsync
+        env:
+          SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+          SSH_PORT: ${{ secrets.HOSTINGER_SSH_PORT }}
+          SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
+          SSH_PASS: ${{ secrets.HOSTINGER_SSH_PASS }}
+          WEB_ROOT: ${{ secrets.HOSTINGER_WEB_ROOT }}
+        run: |
+          echo "🚀 Starting deployment to Hostinger..."
+
+          # Deploy theme files
+          echo "📦 Deploying theme..."
+          SSHPASS="$SSH_PASS" sshpass -e rsync -avz --delete \
+            --exclude='.git/' \
+            --exclude='node_modules/' \
+            --exclude='*.log' \
+            --exclude='.DS_Store' \
+            -e "ssh -p $SSH_PORT -o StrictHostKeyChecking=no" \
+            ./app/public/wp-content/themes/pilgrimirl/ \
+            $SSH_USER@$SSH_HOST:$WEB_ROOT/wp-content/themes/pilgrimirl/
+
+          echo "✅ Theme deployed successfully"
+
+          # Deploy plugins if changed
+          if [ -d "./app/public/wp-content/plugins" ]; then
+            echo "📦 Deploying plugins..."
+            SSHPASS="$SSH_PASS" sshpass -e rsync -avz \
+              --exclude='.git/' \
+              --exclude='node_modules/' \
+              -e "ssh -p $SSH_PORT -o StrictHostKeyChecking=no" \
+              ./app/public/wp-content/plugins/ \
+              $SSH_USER@$SSH_HOST:$WEB_ROOT/wp-content/plugins/
+            echo "✅ Plugins deployed"
+          fi
+
+          # Deploy mu-plugins if they exist
+          if [ -d "./app/public/wp-content/mu-plugins" ]; then
+            echo "📦 Deploying mu-plugins..."
+            SSHPASS="$SSH_PASS" sshpass -e rsync -avz \
+              -e "ssh -p $SSH_PORT -o StrictHostKeyChecking=no" \
+              ./app/public/wp-content/mu-plugins/ \
+              $SSH_USER@$SSH_HOST:$WEB_ROOT/wp-content/mu-plugins/
+            echo "✅ MU-plugins deployed"
+          fi
+
+      - name: Clear WordPress Caches
+        env:
+          SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST }}
+          SSH_PORT: ${{ secrets.HOSTINGER_SSH_PORT }}
+          SSH_USER: ${{ secrets.HOSTINGER_SSH_USER }}
+          SSH_PASS: ${{ secrets.HOSTINGER_SSH_PASS }}
+          WEB_ROOT: ${{ secrets.HOSTINGER_WEB_ROOT }}
+        run: |
+          echo "🧹 Clearing WordPress caches..."
+          SSHPASS="$SSH_PASS" sshpass -e ssh -p $SSH_PORT -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST \
+            "cd $WEB_ROOT && wp cache flush 2>/dev/null || echo 'Cache cleared or WP-CLI not available'"
+
+      - name: Verify Deployment
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          echo "🔍 Verifying deployment..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" $SITE_URL)
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "301" ] || [ "$HTTP_CODE" = "302" ]; then
+            echo "✅ Site is accessible (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️  Site returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+      - name: Deployment Summary
+        if: always()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎉 Deployment Complete!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Site: ${{ secrets.SITE_URL }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Deployed by: ${{ github.actor }}"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
