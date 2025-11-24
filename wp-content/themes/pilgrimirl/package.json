@@ -1,0 +1,49 @@
+{
+  "name": "pilgrimirl-theme",
+  "version": "2.0.0",
+  "description": "Modern WordPress theme for Irish Pilgrimage and Monastic Sites",
+  "private": true,
+  "scripts": {
+    "watch": "npm-run-all --parallel watch:*",
+    "watch:css": "chokidar 'css/**/*.css' '!css/**/*.min.css' -c 'npm run build:css'",
+    "watch:js": "chokidar 'js/**/*.js' '!js/**/*.min.js' -c 'npm run build:js'",
+    "build": "npm-run-all build:*",
+    "build:css": "npm run minify:css",
+    "build:js": "npm run minify:js",
+    "minify:css": "postcss css/*.css --dir css --use cssnano --ext .min.css --no-map",
+    "minify:js": "terser js/debug-utils.js -c -m -o js/debug-utils.min.js && terser js/pilgrimirl.js -c -m -o js/pilgrimirl.min.js && terser js/maps.js -c -m -o js/maps.min.js && terser js/homepage-filters.js -c -m -o js/homepage-filters.min.js",
+    "lint:css": "stylelint 'css/**/*.css' '!css/**/*.min.css'",
+    "lint:js": "eslint 'js/**/*.js' '!js/**/*.min.js'",
+    "format": "prettier --write 'css/**/*.css' 'js/**/*.js' '!**/*.min.*'",
+    "clean": "rm -rf css/*.min.css js/*.min.js",
+    "production": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "wordpress",
+    "theme",
+    "pilgrimage",
+    "ireland",
+    "monastic-sites"
+  ],
+  "author": "PilgrimIRL Team",
+  "license": "GPL-2.0-or-later",
+  "devDependencies": {
+    "@wordpress/eslint-plugin": "^17.0.0",
+    "autoprefixer": "^10.4.16",
+    "chokidar-cli": "^3.0.0",
+    "cssnano": "^6.0.1",
+    "eslint": "^8.54.0",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^11.0.0",
+    "prettier": "^3.1.0",
+    "stylelint": "^15.11.0",
+    "stylelint-config-standard": "^34.0.0",
+    "terser": "^5.24.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
