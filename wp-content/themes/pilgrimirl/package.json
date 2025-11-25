@@ -28,6 +28,8 @@
   "author": "PilgrimIRL Team",
   "license": "GPL-2.0-or-later",
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
+    "@playwright/test": "^1.56.1",
     "@wordpress/eslint-plugin": "^17.0.0",
     "autoprefixer": "^10.4.16",
     "chokidar-cli": "^3.0.0",

@@ -7,7 +7,7 @@
     'use strict';
 
     let currentFilters = {
-        post_type: 'pilgrimage_route', // Default to pilgrimage routes
+        post_type: '', // Default to all sites
         county: '',
         saint: '',
         century: ''
@@ -23,9 +23,9 @@
     function initHomepageFilters() {
         console.log('Initializing homepage filters');
         
-        // Set default active state for Pilgrimage Routes
+        // Set default active state for All Sites
         $('.post-type-filters .filter-btn').removeClass('active');
-        $('.post-type-filters .filter-btn[data-type="pilgrimage_route"]').addClass('active');
+        $('.post-type-filters .filter-btn[data-type="all"]').addClass('active');
         
         // Load initial filter options
         loadFilterOptions();
@@ -290,25 +290,9 @@
     }
 
     /**
-     * Render results
+     * Render results - now just updates count and map
      */
     function renderResults(sites) {
-        const container = $('#pilgrim-results');
-        container.empty();
-        
-        if (sites.length === 0) {
-            showEmptyState();
-            return;
-        }
-        
-        // Add view class
-        container.removeClass('results-grid results-list').addClass('results-' + currentView);
-        
-        sites.forEach(function(site) {
-            const card = createResultCard(site);
-            container.append(card);
-        });
-        
         // Update map with filtered sites
         updateMapWithFilteredSites(sites);
     }
@@ -320,7 +304,7 @@
         const postTypeLabels = {
             'monastic_site': 'Monastic Site',
             'pilgrimage_route': 'Pilgrimage Route',
-            'christian_ruin': 'Christian Ruin'
+            'christian_site': 'Christian Site'
         };
         
         const postTypeLabel = postTypeLabels[site.post_type] || site.post_type;

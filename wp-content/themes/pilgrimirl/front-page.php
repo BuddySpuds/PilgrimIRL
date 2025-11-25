@@ -39,7 +39,7 @@ get_header(); ?>
                                 <option value="">All Types</option>
                                 <option value="monastic_site">Monastic Sites</option>
                                 <option value="pilgrimage_route">Pilgrimage Routes</option>
-                                <option value="christian_ruin">Christian Ruins</option>
+                                <option value="christian_site">Christian Sites</option>
                             </select>
                             
                             <button type="button" id="reset-filters" class="pilgrim-btn pilgrim-btn-secondary">Reset</button>
@@ -69,7 +69,7 @@ get_header(); ?>
                     <button class="filter-btn active" data-type="all">All Sites</button>
                     <button class="filter-btn" data-type="monastic_site">Monastic Sites</button>
                     <button class="filter-btn" data-type="pilgrimage_route">Pilgrimage Routes</button>
-                    <button class="filter-btn" data-type="christian_ruin">Christian Ruins</button>
+                    <button class="filter-btn" data-type="christian_site">Christian Sites</button>
                 </div>
             </div>
             
@@ -107,48 +107,15 @@ get_header(); ?>
         </div>
     </section>
     
-    <!-- Results Section -->
+    <!-- Results Summary Section -->
     <section class="pilgrim-results-section">
         <div class="pilgrim-results-container">
             <div class="results-header">
-                <div class="results-count">Loading sites...</div>
-                <div class="view-toggle">
-                    <button class="view-btn active" data-view="grid">Grid View</button>
-                    <button class="view-btn" data-view="list">List View</button>
-                </div>
-            </div>
-            
-            <div id="pilgrim-results" class="results-grid">
-                <!-- Results will be loaded by JavaScript -->
-            </div>
-        </div>
-    </section>
-    
-    <!-- Featured Content Section -->
-    <section class="featured-content">
-        <div class="container">
-            <h2>Explore by Category</h2>
-            
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🏛️</div>
-                    <h3>Monastic Sites</h3>
-                    <p>Discover ancient monasteries and abbeys that shaped Ireland's spiritual landscape</p>
-                    <a href="<?php echo get_post_type_archive_link('monastic_site'); ?>" class="pilgrim-btn">Explore Sites</a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🚶‍♂️</div>
-                    <h3>Pilgrimage Routes</h3>
-                    <p>Walk in the footsteps of saints along Ireland's sacred pathways</p>
-                    <a href="<?php echo get_post_type_archive_link('pilgrimage_route'); ?>" class="pilgrim-btn">View Routes</a>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">⛪</div>
-                    <h3>Christian Ruins</h3>
-                    <p>Explore the remnants of Ireland's early Christian heritage</p>
-                    <a href="<?php echo get_post_type_archive_link('christian_ruin'); ?>" class="pilgrim-btn">Discover Ruins</a>
+                <div class="results-count" id="results-count">Loading sites...</div>
+                <div class="results-links">
+                    <a href="<?php echo get_post_type_archive_link('monastic_site'); ?>" class="results-link">View All Monastic Sites</a>
+                    <a href="<?php echo get_post_type_archive_link('pilgrimage_route'); ?>" class="results-link">View All Pilgrimage Routes</a>
+                    <a href="<?php echo get_post_type_archive_link('christian_site'); ?>" class="results-link">View All Christian Sites</a>
                 </div>
             </div>
         </div>
@@ -189,69 +156,6 @@ get_header(); ?>
         </div>
     </section>
     
-    <!-- Recent Additions -->
-    <section class="recent-additions">
-        <div class="container">
-            <h2>Recently Added</h2>
-            
-            <div class="recent-grid">
-                <?php
-                $recent_posts = new WP_Query(array(
-                    'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_ruin'),
-                    'posts_per_page' => 6,
-                    'orderby' => 'date',
-                    'order' => 'DESC',
-                    'post_status' => 'publish'
-                ));
-                
-                if ($recent_posts->have_posts()) {
-                    while ($recent_posts->have_posts()) {
-                        $recent_posts->the_post();
-                        $post_type_obj = get_post_type_object(get_post_type());
-                        $counties = wp_get_post_terms(get_the_ID(), 'county');
-                        ?>
-                        <div class="site-card recent-card">
-                            <?php if (has_post_thumbnail()) : ?>
-                                <div class="card-image">
-                                    <?php the_post_thumbnail('site-card-thumb'); ?>
-                                </div>
-                            <?php endif; ?>
-                            
-                            <div class="card-content">
-                                <div class="card-meta">
-                                    <span class="post-type-label"><?php echo $post_type_obj->labels->singular_name; ?></span>
-                                    <?php if (!empty($counties)) : ?>
-                                        <span class="county-label"><?php echo esc_html($counties[0]->name); ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <h4><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
-                                
-                                <div class="card-excerpt">
-                                    <?php the_excerpt(); ?>
-                                </div>
-                                
-                                <div class="card-actions">
-                                    <a href="<?php the_permalink(); ?>" class="read-more-btn">Learn More</a>
-                                    <?php
-                                    $lat = get_post_meta(get_the_ID(), '_pilgrimirl_latitude', true);
-                                    $lng = get_post_meta(get_the_ID(), '_pilgrimirl_longitude', true);
-                                    if ($lat && $lng) :
-                                    ?>
-                                        <button class="show-on-map-btn" data-lat="<?php echo esc_attr($lat); ?>" data-lng="<?php echo esc_attr($lng); ?>">View on Map</button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                    }
-                    wp_reset_postdata();
-                }
-                ?>
-            </div>
-        </div>
-    </section>
-    
     <!-- Call to Action -->
     <section class="cta-section">
         <div class="container">
@@ -276,7 +180,7 @@ get_footer();
  */
 function wp_count_posts_by_county($county_slug) {
     $args = array(
-        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_ruin'),
+        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_site'),
         'post_status' => 'publish',
         'posts_per_page' => -1,
         'tax_query' => array(

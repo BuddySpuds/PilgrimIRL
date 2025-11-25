@@ -29,7 +29,10 @@ function pilgrimirl_register_taxonomies() {
         ),
         'hierarchical' => true,
         'public' => true,
-        'rewrite' => array('slug' => 'county'),
+        'rewrite' => array(
+            'slug' => 'county',
+            'with_front' => false,
+        ),
         'show_in_rest' => true,
     ));
 
@@ -186,6 +189,51 @@ function pilgrimirl_register_taxonomies() {
     ));
 }
 add_action('init', 'pilgrimirl_register_taxonomies');
+
+/**
+ * Add custom rewrite rule for county taxonomy overview
+ */
+function pilgrimirl_county_rewrite_rules() {
+    add_rewrite_rule(
+        '^county/?$',
+        'index.php?county_archive=1',
+        'top'
+    );
+
+    // Flush rewrite rules if not already done
+    if (get_option('pilgrimirl_county_archive_flushed') != '1') {
+        flush_rewrite_rules();
+        update_option('pilgrimirl_county_archive_flushed', '1');
+    }
+}
+add_action('init', 'pilgrimirl_county_rewrite_rules');
+
+/**
+ * Add custom query var for county archive
+ */
+function pilgrimirl_county_query_vars($vars) {
+    $vars[] = 'county_archive';
+    return $vars;
+}
+add_filter('query_vars', 'pilgrimirl_county_query_vars');
+
+/**
+ * Template redirect for county archive overview
+ */
+function pilgrimirl_county_template_redirect() {
+    if (get_query_var('county_archive')) {
+        // Set as taxonomy query
+        global $wp_query;
+        $wp_query->is_tax = true;
+        $wp_query->is_archive = true;
+        $wp_query->is_home = false;
+
+        // Load taxonomy template
+        include(locate_template('taxonomy.php'));
+        exit;
+    }
+}
+add_action('template_redirect', 'pilgrimirl_county_template_redirect');
 
 /**
  * Create default Irish counties on theme activation

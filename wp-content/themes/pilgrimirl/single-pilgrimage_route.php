@@ -131,8 +131,8 @@ while (have_posts()) : the_post();
                     <?php if ($latitude && $longitude) : ?>
                         <div class="sidebar-section route-map">
                             <h3>Route Location</h3>
-                            <div class="pilgrim-site-map" 
-                                 data-lat="<?php echo esc_attr($latitude); ?>" 
+                            <div id="single-site-map" class="pilgrim-site-map"
+                                 data-lat="<?php echo esc_attr($latitude); ?>"
                                  data-lng="<?php echo esc_attr($longitude); ?>"
                                  data-title="<?php echo esc_attr(get_the_title()); ?>">
                                 <!-- Map will be initialized by JavaScript -->

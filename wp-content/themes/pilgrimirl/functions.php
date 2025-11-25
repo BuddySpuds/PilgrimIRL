@@ -62,9 +62,19 @@ function pilgrimirl_enqueue_styles() {
     wp_enqueue_style('pilgrimirl-footer', pilgrimirl_asset('css/footer.css'), array('pilgrimirl-style'), $version);
     wp_enqueue_style('pilgrimirl-homepage-filters', pilgrimirl_asset('css/homepage-filters.css'), array('pilgrimirl-style'), $version);
 
+    // Archive pages CSS
+    if (is_post_type_archive(array('monastic_site', 'pilgrimage_route', 'christian_site')) || is_tax('county')) {
+        wp_enqueue_style('pilgrimirl-archive-pages', pilgrimirl_asset('css/archive-pages.css'), array('pilgrimirl-style'), $version);
+    }
+
     // Saints page CSS
     if (is_page_template('page-saints.php') || is_page('saints')) {
         wp_enqueue_style('pilgrimirl-saints-page', pilgrimirl_asset('css/saints-page.css'), array('pilgrimirl-style'), $version);
+    }
+
+    // Calendar page CSS
+    if (is_page_template('page-calendar.php') || is_page('calendar')) {
+        wp_enqueue_style('pilgrimirl-calendar', pilgrimirl_asset('css/calendar.css'), array('pilgrimirl-style'), $version);
     }
 
     // Enqueue Google Fonts
@@ -240,6 +250,35 @@ function pilgrimirl_register_post_types() {
         'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
         'menu_icon' => 'dashicons-location-alt',
         'show_in_rest' => true,
+    ));
+
+    // Liturgical Calendar Events Post Type
+    register_post_type('calendar_event', array(
+        'labels' => array(
+            'name' => 'Calendar Events',
+            'singular_name' => 'Calendar Event',
+            'add_new' => 'Add New Event',
+            'add_new_item' => 'Add New Calendar Event',
+            'edit_item' => 'Edit Calendar Event',
+            'new_item' => 'New Calendar Event',
+            'view_item' => 'View Calendar Event',
+            'search_items' => 'Search Calendar Events',
+            'not_found' => 'No calendar events found',
+            'not_found_in_trash' => 'No calendar events found in trash',
+            'menu_name' => 'Liturgical Calendar'
+        ),
+        'public' => true,
+        'has_archive' => false,
+        'publicly_queryable' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'calendar-event'),
+        'capability_type' => 'post',
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
+        'menu_icon' => 'dashicons-calendar-alt',
+        'show_in_rest' => true,
+        'menu_position' => 25,
     ));
 }
 add_action('init', 'pilgrimirl_register_post_types');
@@ -419,6 +458,69 @@ function pilgrimirl_register_taxonomies() {
         'rewrite' => array('slug' => 'century'),
         'show_in_rest' => true,
     ));
+
+    // Liturgical Rank taxonomy (for Calendar Events)
+    register_taxonomy('liturgical_rank', 'calendar_event', array(
+        'labels' => array(
+            'name' => 'Liturgical Ranks',
+            'singular_name' => 'Liturgical Rank',
+            'search_items' => 'Search Ranks',
+            'all_items' => 'All Ranks',
+            'edit_item' => 'Edit Rank',
+            'update_item' => 'Update Rank',
+            'add_new_item' => 'Add New Rank',
+            'new_item_name' => 'New Rank Name',
+            'menu_name' => 'Ranks'
+        ),
+        'hierarchical' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'liturgical-rank'),
+        'show_in_rest' => true,
+    ));
+
+    // Liturgical Color taxonomy (for Calendar Events)
+    register_taxonomy('liturgical_color', 'calendar_event', array(
+        'labels' => array(
+            'name' => 'Liturgical Colors',
+            'singular_name' => 'Liturgical Color',
+            'search_items' => 'Search Colors',
+            'all_items' => 'All Colors',
+            'edit_item' => 'Edit Color',
+            'update_item' => 'Update Color',
+            'add_new_item' => 'Add New Color',
+            'new_item_name' => 'New Color Name',
+            'menu_name' => 'Colors'
+        ),
+        'hierarchical' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'liturgical-color'),
+        'show_in_rest' => true,
+    ));
+
+    // Liturgical Season taxonomy (for Calendar Events)
+    register_taxonomy('liturgical_season', 'calendar_event', array(
+        'labels' => array(
+            'name' => 'Liturgical Seasons',
+            'singular_name' => 'Liturgical Season',
+            'search_items' => 'Search Seasons',
+            'all_items' => 'All Seasons',
+            'edit_item' => 'Edit Season',
+            'update_item' => 'Update Season',
+            'add_new_item' => 'Add New Season',
+            'new_item_name' => 'New Season Name',
+            'menu_name' => 'Seasons'
+        ),
+        'hierarchical' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'liturgical-season'),
+        'show_in_rest' => true,
+    ));
 }
 add_action('init', 'pilgrimirl_register_taxonomies');
 
@@ -435,7 +537,7 @@ function pilgrimirl_add_meta_boxes() {
         'normal',
         'high'
     );
-    
+
     // Historical Details Meta Box
     add_meta_box(
         'pilgrimirl_historical',
@@ -452,6 +554,16 @@ function pilgrimirl_add_meta_boxes() {
         'Route Information',
         'pilgrimirl_route_meta_box_callback',
         'pilgrimage_route',
+        'normal',
+        'high'
+    );
+
+    // Calendar Event Details Meta Box
+    add_meta_box(
+        'calendar_event_details',
+        'Event Details',
+        'pilgrimirl_calendar_event_meta_box_callback',
+        'calendar_event',
         'normal',
         'high'
     );
@@ -532,6 +644,133 @@ function pilgrimirl_route_meta_box_callback($post) {
     echo '<td><textarea id="pilgrimirl_route_excerpt" name="pilgrimirl_route_excerpt" rows="3" cols="50">' . esc_textarea($route_excerpt) . '</textarea></td></tr>';
     echo '</table>';
 }
+
+/**
+ * Calendar Event Meta Box Callback
+ */
+function pilgrimirl_calendar_event_meta_box_callback($post) {
+    wp_nonce_field('pilgrimirl_calendar_event_nonce', 'pilgrimirl_calendar_event_nonce_field');
+
+    $event_month = get_post_meta($post->ID, '_calendar_event_month', true);
+    $event_day = get_post_meta($post->ID, '_calendar_event_day', true);
+    $event_year = get_post_meta($post->ID, '_calendar_event_year', true);
+    $is_irish_saint = get_post_meta($post->ID, '_calendar_event_irish', true);
+    $is_moveable = get_post_meta($post->ID, '_calendar_event_moveable', true);
+    $related_sites = get_post_meta($post->ID, '_calendar_event_related_sites', true);
+    $traditions = get_post_meta($post->ID, '_calendar_event_traditions', true);
+    $significance = get_post_meta($post->ID, '_calendar_event_significance', true);
+
+    echo '<table class="form-table">';
+
+    // Date fields
+    echo '<tr><th><label>Event Date:</label></th><td>';
+    echo '<select name="calendar_event_month" id="calendar_event_month">';
+    echo '<option value="">Select Month</option>';
+    $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+    foreach ($months as $i => $month) {
+        $selected = ($event_month == ($i + 1)) ? ' selected' : '';
+        echo '<option value="' . ($i + 1) . '"' . $selected . '>' . esc_html($month) . '</option>';
+    }
+    echo '</select> ';
+
+    echo '<select name="calendar_event_day" id="calendar_event_day">';
+    echo '<option value="">Day</option>';
+    for ($d = 1; $d <= 31; $d++) {
+        $selected = ($event_day == $d) ? ' selected' : '';
+        echo '<option value="' . $d . '"' . $selected . '>' . $d . '</option>';
+    }
+    echo '</select> ';
+
+    echo '<select name="calendar_event_year" id="calendar_event_year">';
+    echo '<option value="">Year (optional)</option>';
+    $current_year = date('Y');
+    for ($y = $current_year; $y <= $current_year + 5; $y++) {
+        $selected = ($event_year == $y) ? ' selected' : '';
+        echo '<option value="' . $y . '"' . $selected . '>' . $y . '</option>';
+    }
+    echo '</select>';
+    echo '<p class="description">Leave year empty for recurring annual events</p>';
+    echo '</td></tr>';
+
+    // Irish Saint checkbox
+    echo '<tr><th><label for="calendar_event_irish">Irish Saint/Feast:</label></th>';
+    echo '<td><input type="checkbox" id="calendar_event_irish" name="calendar_event_irish" value="1"' . checked($is_irish_saint, '1', false) . ' />';
+    echo '<label for="calendar_event_irish"> This is an Irish saint or feast day</label></td></tr>';
+
+    // Moveable feast checkbox
+    echo '<tr><th><label for="calendar_event_moveable">Moveable Feast:</label></th>';
+    echo '<td><input type="checkbox" id="calendar_event_moveable" name="calendar_event_moveable" value="1"' . checked($is_moveable, '1', false) . ' />';
+    echo '<label for="calendar_event_moveable"> Date varies each year (e.g., Easter)</label></td></tr>';
+
+    // Related Sites
+    echo '<tr><th><label for="calendar_event_related_sites">Related Sacred Sites:</label></th>';
+    echo '<td><textarea id="calendar_event_related_sites" name="calendar_event_related_sites" rows="3" cols="50">' . esc_textarea($related_sites) . '</textarea>';
+    echo '<p class="description">List related monastic sites, holy wells, etc.</p></td></tr>';
+
+    // Traditions
+    echo '<tr><th><label for="calendar_event_traditions">Traditions & Customs:</label></th>';
+    echo '<td><textarea id="calendar_event_traditions" name="calendar_event_traditions" rows="4" cols="50">' . esc_textarea($traditions) . '</textarea>';
+    echo '<p class="description">Traditional observances, pilgrimages, patterns, etc.</p></td></tr>';
+
+    // Significance
+    echo '<tr><th><label for="calendar_event_significance">Significance:</label></th>';
+    echo '<td><textarea id="calendar_event_significance" name="calendar_event_significance" rows="3" cols="50">' . esc_textarea($significance) . '</textarea>';
+    echo '<p class="description">Historical and spiritual significance</p></td></tr>';
+
+    echo '</table>';
+}
+
+/**
+ * Save Calendar Event Meta Box Data
+ */
+function pilgrimirl_save_calendar_event_meta($post_id) {
+    if (!isset($_POST['pilgrimirl_calendar_event_nonce_field'])) {
+        return;
+    }
+
+    if (!wp_verify_nonce($_POST['pilgrimirl_calendar_event_nonce_field'], 'pilgrimirl_calendar_event_nonce')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    if (get_post_type($post_id) !== 'calendar_event') {
+        return;
+    }
+
+    // Save date fields
+    if (isset($_POST['calendar_event_month'])) {
+        update_post_meta($post_id, '_calendar_event_month', intval($_POST['calendar_event_month']));
+    }
+    if (isset($_POST['calendar_event_day'])) {
+        update_post_meta($post_id, '_calendar_event_day', intval($_POST['calendar_event_day']));
+    }
+    if (isset($_POST['calendar_event_year'])) {
+        update_post_meta($post_id, '_calendar_event_year', intval($_POST['calendar_event_year']));
+    }
+
+    // Save checkboxes
+    update_post_meta($post_id, '_calendar_event_irish', isset($_POST['calendar_event_irish']) ? '1' : '0');
+    update_post_meta($post_id, '_calendar_event_moveable', isset($_POST['calendar_event_moveable']) ? '1' : '0');
+
+    // Save text fields
+    if (isset($_POST['calendar_event_related_sites'])) {
+        update_post_meta($post_id, '_calendar_event_related_sites', sanitize_textarea_field($_POST['calendar_event_related_sites']));
+    }
+    if (isset($_POST['calendar_event_traditions'])) {
+        update_post_meta($post_id, '_calendar_event_traditions', sanitize_textarea_field($_POST['calendar_event_traditions']));
+    }
+    if (isset($_POST['calendar_event_significance'])) {
+        update_post_meta($post_id, '_calendar_event_significance', sanitize_textarea_field($_POST['calendar_event_significance']));
+    }
+}
+add_action('save_post', 'pilgrimirl_save_calendar_event_meta');
 
 /**
  * Save Meta Box Data
@@ -1271,56 +1510,6 @@ function pilgrimirl_post_contains_century($post_id, $century_slug) {
 }
 
 /**
- * Extract saints from a specific post's content
- */
-function pilgrimirl_extract_saints_from_post_content($post_id) {
-    $post = get_post($post_id);
-    if (!$post) return array();
-    
-    $content = $post->post_content;
-    $title = $post->post_title;
-    $communities_provenance = get_post_meta($post_id, '_pilgrimirl_communities_provenance', true);
-    $all_text = $content . ' ' . $title . ' ' . $communities_provenance;
-    
-    $saints = array();
-    
-    // Use same patterns as the main extraction function
-    $saint_patterns = array(
-        '/St\.?\s+([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i',
-        '/Saint\s+([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i',
-        '/founded\s+by\s+(?:St\.?\s+)?([A-Z][a-z]{2,15}(?:\s+[A-Z][a-z]{2,15})?)\b/i'
-    );
-    
-    foreach ($saint_patterns as $pattern) {
-        if (preg_match_all($pattern, $all_text, $matches)) {
-            foreach ($matches[1] as $saint_name) {
-                $saint_name = trim($saint_name);
-                $saint_name_lower = strtolower($saint_name);
-                
-                // Apply same validation as main extraction function
-                $false_positives = array(
-                    'times', 'until', 'after', 'before', 'during', 'within', 'about',
-                    'church', 'abbey', 'monastery', 'priory', 'cathedral', 'chapel',
-                    'house', 'order', 'rule', 'community', 'foundation', 'dissolution',
-                    'century', 'period', 'time', 'year', 'date', 'early', 'late'
-                );
-                
-                if (strlen($saint_name) >= 3 && 
-                    strlen($saint_name) <= 20 && 
-                    !in_array($saint_name_lower, $false_positives) &&
-                    !preg_match('/\d/', $saint_name) && 
-                    !preg_match('/[^a-zA-Z\s]/', $saint_name)) {
-                    $saints[] = 'St. ' . $saint_name;
-                }
-            }
-        }
-    }
-    
-    // Remove duplicates and return
-    return array_unique($saints);
-}
-
-/**
  * Get Irish Counties List
  */
 function pilgrimirl_get_irish_counties() {
@@ -1673,4 +1862,292 @@ if (is_admin() && current_user_can('manage_options') && WP_ENVIRONMENT_TYPE === 
     // require_once get_stylesheet_directory() . '/_dev-tools/import-holy-wells.php';
     // require_once get_stylesheet_directory() . '/_dev-tools/import-high-crosses.php';
     // require_once get_stylesheet_directory() . '/_dev-tools/cleanup-christian-sites.php';
+}
+
+/**
+ * Handle iCal Export for Liturgical Calendar (Admin only)
+ */
+function pilgrimirl_handle_ical_export() {
+    if (!isset($_GET['ical']) || $_GET['ical'] !== 'export') {
+        return;
+    }
+
+    // Only on calendar page
+    if (!is_page('calendar') && !is_page_template('page-calendar.php')) {
+        return;
+    }
+
+    // Restrict to logged-in admins only
+    if (!current_user_can('manage_options')) {
+        wp_die('Access denied. iCal export is restricted to administrators.', 'Access Denied', array('response' => 403));
+    }
+
+    $year = isset($_GET['year']) ? intval($_GET['year']) : date('Y');
+
+    // Only allow valid years
+    if (!in_array($year, array(2025, 2026))) {
+        $year = 2025;
+    }
+
+    // Load calendar data
+    $calendar_file = get_stylesheet_directory() . '/includes/calendar-data-' . $year . '.php';
+    if (!file_exists($calendar_file)) {
+        return;
+    }
+
+    $calendar_data = include($calendar_file);
+    if (!$calendar_data) {
+        return;
+    }
+
+    // Generate iCal content
+    $ical = "BEGIN:VCALENDAR\r\n";
+    $ical .= "VERSION:2.0\r\n";
+    $ical .= "PRODID:-//PilgrimIRL//Irish Catholic Liturgical Calendar//EN\r\n";
+    $ical .= "CALSCALE:GREGORIAN\r\n";
+    $ical .= "METHOD:PUBLISH\r\n";
+    $ical .= "X-WR-CALNAME:Irish Catholic Liturgical Calendar " . $year . "\r\n";
+    $ical .= "X-WR-TIMEZONE:Europe/Dublin\r\n";
+
+    foreach ($calendar_data['months'] as $month_num => $month_data) {
+        if (empty($month_data['days'])) {
+            continue;
+        }
+
+        foreach ($month_data['days'] as $day_num => $day_data) {
+            $date = sprintf('%04d%02d%02d', $year, $month_num, $day_num);
+            $uid = md5($date . $day_data['name']) . '@pilgrimirl.com';
+
+            $ical .= "BEGIN:VEVENT\r\n";
+            $ical .= "DTSTART;VALUE=DATE:" . $date . "\r\n";
+            $ical .= "DTEND;VALUE=DATE:" . $date . "\r\n";
+            $ical .= "DTSTAMP:" . gmdate('Ymd\THis\Z') . "\r\n";
+            $ical .= "UID:" . $uid . "\r\n";
+            $ical .= "SUMMARY:" . pilgrimirl_ical_escape($day_data['name']) . "\r\n";
+
+            $description = 'Rank: ' . ucfirst($day_data['rank']) . ' | Color: ' . ucfirst($day_data['color']);
+            if (isset($day_data['irish']) && $day_data['irish']) {
+                $description .= ' | Irish Saint';
+            }
+            $ical .= "DESCRIPTION:" . pilgrimirl_ical_escape($description) . "\r\n";
+
+            $categories = array('Liturgical');
+            if (isset($day_data['irish']) && $day_data['irish']) {
+                $categories[] = 'Irish Saint';
+            }
+            $categories[] = ucfirst($day_data['rank']);
+            $ical .= "CATEGORIES:" . implode(',', $categories) . "\r\n";
+
+            $ical .= "END:VEVENT\r\n";
+        }
+    }
+
+    $ical .= "END:VCALENDAR\r\n";
+
+    // Send headers
+    header('Content-Type: text/calendar; charset=utf-8');
+    header('Content-Disposition: attachment; filename="irish-liturgical-calendar-' . $year . '.ics"');
+    header('Content-Length: ' . strlen($ical));
+
+    echo $ical;
+    exit;
+}
+add_action('template_redirect', 'pilgrimirl_handle_ical_export');
+
+/**
+ * Escape text for iCal format
+ */
+function pilgrimirl_ical_escape($text) {
+    $text = str_replace(array("\r\n", "\n", "\r"), "\\n", $text);
+    $text = str_replace(array(",", ";", "\\"), array("\\,", "\\;", "\\\\"), $text);
+    return $text;
+}
+
+/**
+ * REST API Endpoint for Calendar Events (for Telegram integration)
+ */
+function pilgrimirl_register_calendar_api() {
+    register_rest_route('pilgrimirl/v1', '/calendar', array(
+        'methods' => 'GET',
+        'callback' => 'pilgrimirl_get_calendar_events',
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'year' => array(
+                'default' => date('Y'),
+                'validate_callback' => function($param) {
+                    return is_numeric($param) && in_array(intval($param), array(2025, 2026));
+                }
+            ),
+            'month' => array(
+                'default' => null,
+                'validate_callback' => function($param) {
+                    return is_null($param) || (is_numeric($param) && $param >= 1 && $param <= 12);
+                }
+            ),
+            'irish_only' => array(
+                'default' => false,
+                'validate_callback' => function($param) {
+                    return is_bool($param) || $param === 'true' || $param === 'false';
+                }
+            ),
+        ),
+    ));
+
+    register_rest_route('pilgrimirl/v1', '/calendar/today', array(
+        'methods' => 'GET',
+        'callback' => 'pilgrimirl_get_today_feast',
+        'permission_callback' => '__return_true',
+    ));
+
+    register_rest_route('pilgrimirl/v1', '/calendar/upcoming', array(
+        'methods' => 'GET',
+        'callback' => 'pilgrimirl_get_upcoming_feasts',
+        'permission_callback' => '__return_true',
+        'args' => array(
+            'days' => array(
+                'default' => 7,
+                'validate_callback' => function($param) {
+                    return is_numeric($param) && $param >= 1 && $param <= 30;
+                }
+            ),
+        ),
+    ));
+}
+add_action('rest_api_init', 'pilgrimirl_register_calendar_api');
+
+/**
+ * Get calendar events via REST API
+ */
+function pilgrimirl_get_calendar_events($request) {
+    $year = intval($request->get_param('year'));
+    $month = $request->get_param('month');
+    $irish_only = $request->get_param('irish_only');
+
+    if ($irish_only === 'true') {
+        $irish_only = true;
+    }
+
+    $calendar_file = get_stylesheet_directory() . '/includes/calendar-data-' . $year . '.php';
+    if (!file_exists($calendar_file)) {
+        return new WP_Error('no_calendar', 'Calendar data not found', array('status' => 404));
+    }
+
+    $calendar_data = include($calendar_file);
+    $events = array();
+
+    foreach ($calendar_data['months'] as $month_num => $month_data) {
+        if ($month && intval($month) !== $month_num) {
+            continue;
+        }
+
+        if (empty($month_data['days'])) {
+            continue;
+        }
+
+        foreach ($month_data['days'] as $day_num => $day_data) {
+            if ($irish_only && !isset($day_data['irish'])) {
+                continue;
+            }
+
+            $events[] = array(
+                'date' => sprintf('%04d-%02d-%02d', $year, $month_num, $day_num),
+                'name' => $day_data['name'],
+                'rank' => $day_data['rank'],
+                'color' => $day_data['color'],
+                'irish' => isset($day_data['irish']) ? true : false,
+                'season' => isset($day_data['season']) ? $day_data['season'] : null,
+            );
+        }
+    }
+
+    return rest_ensure_response(array(
+        'year' => $year,
+        'count' => count($events),
+        'events' => $events,
+    ));
+}
+
+/**
+ * Get today's feast via REST API
+ */
+function pilgrimirl_get_today_feast($request) {
+    $year = intval(date('Y'));
+    $month = intval(date('n'));
+    $day = intval(date('j'));
+
+    $calendar_file = get_stylesheet_directory() . '/includes/calendar-data-' . $year . '.php';
+    if (!file_exists($calendar_file)) {
+        return rest_ensure_response(array('feast' => null, 'message' => 'No calendar data for this year'));
+    }
+
+    $calendar_data = include($calendar_file);
+
+    if (isset($calendar_data['months'][$month]['days'][$day])) {
+        $feast = $calendar_data['months'][$month]['days'][$day];
+        return rest_ensure_response(array(
+            'date' => date('Y-m-d'),
+            'feast' => array(
+                'name' => $feast['name'],
+                'rank' => $feast['rank'],
+                'color' => $feast['color'],
+                'irish' => isset($feast['irish']) ? true : false,
+            ),
+        ));
+    }
+
+    return rest_ensure_response(array(
+        'date' => date('Y-m-d'),
+        'feast' => null,
+        'message' => 'No special feast day today',
+    ));
+}
+
+/**
+ * Get upcoming feasts via REST API
+ */
+function pilgrimirl_get_upcoming_feasts($request) {
+    $days = intval($request->get_param('days'));
+    $year = intval(date('Y'));
+
+    $calendar_file = get_stylesheet_directory() . '/includes/calendar-data-' . $year . '.php';
+    if (!file_exists($calendar_file)) {
+        return new WP_Error('no_calendar', 'Calendar data not found', array('status' => 404));
+    }
+
+    $calendar_data = include($calendar_file);
+    $upcoming = array();
+    $today = new DateTime();
+
+    for ($i = 0; $i <= $days; $i++) {
+        $check_date = clone $today;
+        $check_date->add(new DateInterval('P' . $i . 'D'));
+
+        $check_year = intval($check_date->format('Y'));
+        $check_month = intval($check_date->format('n'));
+        $check_day = intval($check_date->format('j'));
+
+        // Handle year boundary
+        if ($check_year !== $year) {
+            continue;
+        }
+
+        if (isset($calendar_data['months'][$check_month]['days'][$check_day])) {
+            $feast = $calendar_data['months'][$check_month]['days'][$check_day];
+            $upcoming[] = array(
+                'date' => $check_date->format('Y-m-d'),
+                'days_until' => $i,
+                'name' => $feast['name'],
+                'rank' => $feast['rank'],
+                'color' => $feast['color'],
+                'irish' => isset($feast['irish']) ? true : false,
+            );
+        }
+    }
+
+    return rest_ensure_response(array(
+        'from' => date('Y-m-d'),
+        'to' => $today->add(new DateInterval('P' . $days . 'D'))->format('Y-m-d'),
+        'count' => count($upcoming),
+        'feasts' => $upcoming,
+    ));
 }

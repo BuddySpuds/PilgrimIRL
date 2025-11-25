@@ -39,7 +39,7 @@ get_header(); ?>
                                 <option value="">All Types</option>
                                 <option value="monastic_site">Monastic Sites</option>
                                 <option value="pilgrimage_route">Pilgrimage Routes</option>
-                                <option value="christian_ruin">Christian Ruins</option>
+                                <option value="christian_site">Christian Sites</option>
                             </select>
                             
                             <button type="button" id="reset-filters" class="pilgrim-btn pilgrim-btn-secondary">Reset</button>
@@ -78,9 +78,9 @@ get_header(); ?>
                 
                 <div class="feature-card">
                     <div class="feature-icon">⛪</div>
-                    <h3>Christian Ruins</h3>
+                    <h3>Christian Sites</h3>
                     <p>Explore the remnants of Ireland's early Christian heritage</p>
-                    <a href="<?php echo get_post_type_archive_link('christian_ruin'); ?>" class="pilgrim-btn">Discover Ruins</a>
+                    <a href="<?php echo get_post_type_archive_link('christian_site'); ?>" class="pilgrim-btn">Explore Christian Sites</a>
                 </div>
             </div>
         </div>
@@ -135,7 +135,7 @@ get_header(); ?>
                 <button class="map-filter-btn" data-type="all">All Sites</button>
                 <button class="map-filter-btn" data-type="monastic_site">Monastic Sites</button>
                 <button class="map-filter-btn" data-type="pilgrimage_route">Pilgrimage Routes</button>
-                <button class="map-filter-btn" data-type="christian_ruin">Christian Ruins</button>
+                <button class="map-filter-btn" data-type="christian_site">Christian Sites</button>
             </div>
         </div>
     </section>
@@ -148,7 +148,7 @@ get_header(); ?>
             <div class="recent-grid">
                 <?php
                 $recent_posts = new WP_Query(array(
-                    'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_ruin'),
+                    'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_site'),
                     'posts_per_page' => 6,
                     'orderby' => 'date',
                     'order' => 'DESC',
@@ -227,7 +227,7 @@ get_footer();
  */
 function wp_count_posts_by_county($county_slug) {
     $args = array(
-        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_ruin'),
+        'post_type' => array('monastic_site', 'pilgrimage_route', 'christian_site'),
         'post_status' => 'publish',
         'posts_per_page' => -1,
         'tax_query' => array(

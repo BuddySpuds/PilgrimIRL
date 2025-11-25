@@ -172,13 +172,13 @@
     color: white;
 }
 
-.filter-btn[data-type="christian_ruin"] {
+.filter-btn[data-type="christian_site"] {
     border-color: #795548;
     color: #795548;
 }
 
-.filter-btn[data-type="christian_ruin"]:hover,
-.filter-btn[data-type="christian_ruin"].active {
+.filter-btn[data-type="christian_site"]:hover,
+.filter-btn[data-type="christian_site"].active {
     background: #795548;
     border-color: #795548;
     color: white;
@@ -206,13 +206,38 @@
 
 .results-count {
     font-family: 'Inter', sans-serif;
-    font-size: 1.1rem;
-    color: #7f8c8d;
+    font-size: 1.25rem;
+    color: #2c3e50;
+    font-weight: 500;
 }
 
 .results-count strong {
-    color: #2c3e50;
-    font-weight: 600;
+    color: #2c5530;
+    font-weight: 700;
+}
+
+.results-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.results-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #2c5530;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.results-link:hover {
+    background: #1e3d22;
+    color: #ffffff;
+    transform: translateY(-2px);
 }
 
 .view-toggle {

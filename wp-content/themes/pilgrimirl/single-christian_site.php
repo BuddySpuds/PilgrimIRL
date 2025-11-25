@@ -25,18 +25,18 @@ get_header(); ?>
                         <a href="<?php echo home_url(); ?>">Home</a> &raquo; 
                         <a href="<?php echo get_post_type_archive_link('christian_site'); ?>">Christian Sites</a>
                         <?php if (!empty($counties)): ?>
-                            &raquo; <a href="<?php echo get_term_link(get_term_by('name', $counties[0], 'county')); ?>"><?php echo $counties[0]; ?></a>
+                            &raquo; <a href="<?php echo get_term_link(get_term_by('name', $counties[0], 'county')); ?>"><?php echo esc_html($counties[0]); ?></a>
                         <?php endif; ?>
                         &raquo; <?php the_title(); ?>
                     </div>
                     
                     <div class="site-badges">
                         <?php if (!empty($site_types)): ?>
-                            <span class="site-type-badge"><?php echo $site_types[0]; ?></span>
+                            <span class="site-type-badge"><?php echo esc_html($site_types[0]); ?></span>
                         <?php endif; ?>
                         
                         <?php if (!empty($counties)): ?>
-                            <span class="county-badge"><?php echo $counties[0]; ?></span>
+                            <span class="county-badge"><?php echo esc_html($counties[0]); ?></span>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -276,11 +276,11 @@ get_header(); ?>
                                     
                                     <div class="card-meta">
                                         <?php if (!empty($card_types)): ?>
-                                            <span class="site-type"><?php echo $card_types[0]; ?></span>
+                                            <span class="site-type"><?php echo esc_html($card_types[0]); ?></span>
                                         <?php endif; ?>
                                         
                                         <?php if (!empty($card_counties)): ?>
-                                            <span class="county"><?php echo $card_counties[0]; ?></span>
+                                            <span class="county"><?php echo esc_html($card_counties[0]); ?></span>
                                         <?php endif; ?>
                                     </div>
                                     

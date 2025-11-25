@@ -1,0 +1,23 @@
+# Security Headers for WordPress Theme
+# Add these to your main .htaccess file
+
+# Prevent directory browsing
+Options -Indexes
+
+# Protect wp-config.php
+<files wp-config.php>
+order allow,deny
+deny from all
+</files>
+
+# Protect .htaccess
+<files .htaccess>
+order allow,deny
+deny from all
+</files>
+
+# Disable PHP execution in uploads directory  
+# (Add this to /wp-content/uploads/.htaccess)
+<Files *.php>
+deny from all
+</Files>

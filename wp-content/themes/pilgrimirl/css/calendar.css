@@ -1,0 +1,1007 @@
+/**
+ * PilgrimIRL Liturgical Calendar Styles
+ * Enhanced UI/UX for the Irish Catholic Liturgical Calendar
+ */
+
+/* ==========================================================================
+   CSS VARIABLES
+   ========================================================================== */
+
+.calendar-page {
+    --calendar-primary: #1e4620;
+    --calendar-primary-light: #2d5016;
+    --calendar-primary-dark: #0f2310;
+    --calendar-gold: #FFD700;
+    --calendar-gold-dark: #b8860b;
+    --calendar-white: #ffffff;
+    --calendar-gray-50: #fafafa;
+    --calendar-gray-100: #f5f5f5;
+    --calendar-gray-200: #e8e8e8;
+    --calendar-gray-600: #666666;
+    --calendar-gray-900: #1a1a1a;
+    --calendar-red: #DC143C;
+    --calendar-green: #228B22;
+    --calendar-violet: #8B008B;
+    --calendar-rose: #FF69B4;
+    --calendar-shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+    --calendar-shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+    --calendar-shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --calendar-radius-sm: 8px;
+    --calendar-radius-md: 12px;
+    --calendar-radius-lg: 16px;
+    --calendar-radius-full: 50px;
+}
+
+/* ==========================================================================
+   PAGE BACKGROUND
+   ========================================================================== */
+
+.calendar-page {
+    background: linear-gradient(180deg, var(--calendar-gray-50) 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   HEADER SECTION
+   ========================================================================== */
+
+.calendar-header {
+    background: linear-gradient(135deg, var(--calendar-primary-dark) 0%, var(--calendar-primary) 50%, var(--calendar-primary-light) 100%);
+    color: var(--calendar-white);
+    padding: 4rem 0 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.calendar-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2zm0-30V0h-2v4h-4v2h4v4h2V6h4V4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2zM6 4V0H4v4H0v6h4v4h2V6h4V4z' fill='%23fff' fill-opacity='0.06'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    z-index: 0;
+}
+
+.calendar-header .container {
+    position: relative;
+    z-index: 1;
+}
+
+.calendar-title {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    margin: 0 0 0.75rem;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--calendar-white) !important;
+}
+
+.calendar-description {
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    opacity: 0.95;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+    font-weight: 400;
+    color: var(--calendar-white) !important;
+}
+
+/* ==========================================================================
+   YEAR SELECTOR
+   ========================================================================== */
+
+.year-selector {
+    display: inline-flex;
+    gap: 0;
+    justify-content: center;
+    background: rgba(0,0,0,0.2);
+    padding: 0.35rem;
+    border-radius: var(--calendar-radius-full);
+    backdrop-filter: blur(10px);
+}
+
+.year-btn {
+    padding: 0.875rem 2.5rem;
+    background: transparent;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    border-radius: var(--calendar-radius-full);
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: none;
+    position: relative;
+}
+
+.year-btn:hover {
+    background: rgba(255,255,255,0.15);
+    color: var(--calendar-white);
+}
+
+.year-btn.active {
+    background: var(--calendar-white);
+    color: var(--calendar-primary);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ==========================================================================
+   MONTH NAVIGATION (NEW)
+   ========================================================================== */
+
+.month-nav {
+    background: var(--calendar-white);
+    border-bottom: 1px solid var(--calendar-gray-200);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--calendar-shadow-sm);
+}
+
+.month-nav-inner {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+}
+
+.month-nav-inner::-webkit-scrollbar {
+    height: 4px;
+}
+
+.month-nav-inner::-webkit-scrollbar-thumb {
+    background: var(--calendar-gray-200);
+    border-radius: 2px;
+}
+
+.month-nav-btn {
+    flex-shrink: 0;
+    padding: 0.625rem 1rem;
+    background: var(--calendar-gray-100);
+    color: var(--calendar-gray-600);
+    border: none;
+    border-radius: var(--calendar-radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.month-nav-btn:hover {
+    background: var(--calendar-primary-light);
+    color: var(--calendar-white);
+}
+
+.month-nav-btn.active {
+    background: var(--calendar-primary);
+    color: var(--calendar-white);
+}
+
+/* ==========================================================================
+   LEGEND SECTION
+   ========================================================================== */
+
+.calendar-legend {
+    padding: 2.5rem 0;
+    background: var(--calendar-white);
+    border-bottom: 1px solid var(--calendar-gray-200);
+}
+
+.calendar-legend h2 {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--calendar-gray-900);
+    margin: 0 0 1.5rem;
+    text-align: center;
+}
+
+.calendar-legend h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--calendar-gray-900);
+    margin: 2rem 0 1rem;
+    text-align: center;
+}
+
+.legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.legend-item {
+    text-align: center;
+    padding: 1.25rem;
+    background: var(--calendar-gray-50);
+    border-radius: var(--calendar-radius-md);
+    transition: all 0.2s ease;
+}
+
+.legend-item:hover {
+    background: var(--calendar-gray-100);
+    transform: translateY(-2px);
+}
+
+.legend-item p {
+    margin: 0.75rem 0 0;
+    color: var(--calendar-gray-600);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* ==========================================================================
+   RANK BADGES
+   ========================================================================== */
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-radius: var(--calendar-radius-full);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.rank-badge.solemnity {
+    background: linear-gradient(135deg, var(--calendar-gold) 0%, var(--calendar-gold-dark) 100%);
+    color: #4a3500;
+    border: 1px solid var(--calendar-gold);
+}
+
+.rank-badge.feast {
+    background: linear-gradient(135deg, var(--calendar-primary) 0%, var(--calendar-primary-light) 100%);
+    color: var(--calendar-white);
+}
+
+.rank-badge.memorial {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: var(--calendar-white);
+}
+
+.rank-badge.commemoration,
+.rank-badge.optional-memorial {
+    background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+    color: var(--calendar-white);
+}
+
+.irish-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--calendar-primary) 0%, var(--calendar-primary-light) 100%);
+    color: var(--calendar-white);
+    border-radius: var(--calendar-radius-full);
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   LITURGICAL COLORS
+   ========================================================================== */
+
+.colors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.color-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--calendar-gray-50);
+    border-radius: var(--calendar-radius-md);
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.color-item:hover {
+    background: var(--calendar-gray-100);
+    transform: translateX(4px);
+}
+
+.color-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid var(--calendar-gray-200);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.color-dot.color-white { background: var(--calendar-white); }
+.color-dot.color-red { background: var(--calendar-red); }
+.color-dot.color-green { background: var(--calendar-green); }
+.color-dot.color-violet { background: var(--calendar-violet); }
+.color-dot.color-rose { background: var(--calendar-rose); }
+
+.color-indicator {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--calendar-gray-200);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.color-indicator.color-white { background: var(--calendar-white); }
+.color-indicator.color-red { background: var(--calendar-red); }
+.color-indicator.color-green { background: var(--calendar-green); }
+.color-indicator.color-violet { background: var(--calendar-violet); }
+.color-indicator.color-rose { background: var(--calendar-rose); }
+
+/* ==========================================================================
+   CALENDAR CONTENT / MONTHS GRID
+   ========================================================================== */
+
+.calendar-content {
+    padding: 2.5rem 0;
+}
+
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 1.5rem;
+}
+
+.month-card {
+    background: var(--calendar-white);
+    border-radius: var(--calendar-radius-lg);
+    padding: 0;
+    box-shadow: var(--calendar-shadow-sm);
+    border: 1px solid var(--calendar-gray-200);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    scroll-margin-top: 80px;
+}
+
+.month-card:hover {
+    box-shadow: var(--calendar-shadow-md);
+    transform: translateY(-2px);
+}
+
+.month-name {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--calendar-white);
+    margin: 0;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--calendar-primary-dark) 0%, var(--calendar-primary) 100%);
+    letter-spacing: -0.01em;
+    position: relative;
+}
+
+.month-name::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--calendar-gold), var(--calendar-gold-dark));
+}
+
+.no-special-days {
+    color: var(--calendar-gray-600);
+    font-style: italic;
+    padding: 2rem;
+    text-align: center;
+    background: var(--calendar-gray-50);
+    margin: 1rem;
+    border-radius: var(--calendar-radius-md);
+}
+
+.feast-days-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.75rem;
+}
+
+/* ==========================================================================
+   FEAST DAY ITEMS
+   ========================================================================== */
+
+.feast-day-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--calendar-white);
+    border-radius: var(--calendar-radius-sm);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 0.5rem;
+}
+
+.feast-day-item:last-child {
+    margin-bottom: 0;
+}
+
+.feast-day-item.has-detail {
+    cursor: pointer;
+}
+
+.feast-day-item.has-detail:hover {
+    background: #e8f5e9;
+    border-color: #c8e6c9;
+    transform: translateX(4px);
+    box-shadow: var(--calendar-shadow-sm);
+}
+
+.feast-day-item.no-detail:hover {
+    background: var(--calendar-gray-50);
+}
+
+.feast-day-item.irish-feast {
+    background: linear-gradient(135deg, rgba(45, 80, 22, 0.06) 0%, rgba(58, 107, 31, 0.03) 100%);
+    border-left: 4px solid var(--calendar-primary);
+    padding-left: 1rem;
+}
+
+.feast-day-item.irish-feast:hover {
+    background: linear-gradient(135deg, rgba(45, 80, 22, 0.12) 0%, rgba(58, 107, 31, 0.08) 100%);
+}
+
+/* ==========================================================================
+   FEAST DATE
+   ========================================================================== */
+
+.feast-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 60px;
+}
+
+.date-number {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.625rem;
+    font-weight: 800;
+    color: var(--calendar-primary);
+    line-height: 1;
+}
+
+/* ==========================================================================
+   FEAST DETAILS
+   ========================================================================== */
+
+.feast-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.feast-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--calendar-gray-900);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    line-height: 1.4;
+    flex-wrap: wrap;
+}
+
+.irish-star {
+    color: var(--calendar-gold);
+    font-size: 1.1rem;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.detail-arrow {
+    margin-left: auto;
+    color: var(--calendar-primary);
+    font-weight: bold;
+    font-size: 1rem;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.feast-day-item.has-detail:hover .detail-arrow {
+    opacity: 1;
+    transform: translateX(4px);
+}
+
+.feast-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.feast-meta .rank-badge {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.625rem;
+}
+
+.season-badge {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    background: linear-gradient(135deg, var(--calendar-gold) 0%, var(--calendar-gold-dark) 100%);
+    color: #4a3500;
+    border-radius: var(--calendar-radius-full);
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* ==========================================================================
+   IRISH SAINTS SECTION
+   ========================================================================== */
+
+.irish-saints-section {
+    padding: 3rem 0;
+    background: linear-gradient(180deg, var(--calendar-white) 0%, var(--calendar-gray-50) 100%);
+}
+
+.irish-saints-section h2 {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--calendar-primary);
+    text-align: center;
+    margin-bottom: 0.75rem;
+}
+
+.section-intro {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--calendar-gray-600);
+    max-width: 650px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+}
+
+.saints-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+}
+
+.saint-card {
+    padding: 1.5rem;
+    background: var(--calendar-white);
+    border-radius: var(--calendar-radius-md);
+    border-left: 4px solid var(--calendar-primary);
+    box-shadow: var(--calendar-shadow-sm);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.saint-card::before {
+    content: "★";
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: rgba(255, 215, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.saint-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--calendar-shadow-lg);
+}
+
+.saint-card:hover::before {
+    color: rgba(255, 215, 0, 0.6);
+    transform: rotate(72deg);
+}
+
+.saint-card h4 {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--calendar-primary);
+    margin: 0 0 0.5rem;
+}
+
+.saint-card p {
+    color: var(--calendar-gray-600);
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* ==========================================================================
+   CTA SECTION
+   ========================================================================== */
+
+.calendar-cta {
+    max-width: 750px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    background: linear-gradient(135deg, var(--calendar-primary-dark) 0%, var(--calendar-primary) 50%, var(--calendar-primary-light) 100%);
+    border-radius: var(--calendar-radius-lg);
+    box-shadow: var(--calendar-shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.calendar-cta::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2z' fill='%23fff' fill-opacity='0.05'/%3E%3C/svg%3E");
+    opacity: 0.3;
+}
+
+.calendar-cta > * {
+    position: relative;
+    z-index: 1;
+}
+
+.calendar-cta h3 {
+    font-family: var(--font-heading, 'Playfair Display', serif);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--calendar-white);
+    margin-bottom: 0.75rem;
+}
+
+.calendar-cta p {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 1.75rem;
+    line-height: 1.5;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.875rem 2rem;
+    border-radius: var(--calendar-radius-sm);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-block;
+}
+
+.btn-primary {
+    background: var(--calendar-white);
+    color: var(--calendar-primary);
+    border: 2px solid var(--calendar-white);
+}
+
+.btn-primary:hover {
+    background: var(--calendar-gray-100);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--calendar-white);
+    border: 2px solid rgba(255,255,255,0.5);
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--calendar-white);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   SEARCH & FILTER (NEW)
+   ========================================================================== */
+
+.calendar-search {
+    background: var(--calendar-white);
+    padding: 1.5rem;
+    border-radius: var(--calendar-radius-md);
+    margin-bottom: 2rem;
+    box-shadow: var(--calendar-shadow-sm);
+}
+
+.search-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--calendar-gray-200);
+    border-radius: var(--calendar-radius-sm);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--calendar-primary);
+    box-shadow: 0 0 0 3px rgba(45, 80, 22, 0.1);
+}
+
+.filter-select {
+    padding: 0.875rem 2.5rem 0.875rem 1rem;
+    border: 2px solid var(--calendar-gray-200);
+    border-radius: var(--calendar-radius-sm);
+    font-size: 1rem;
+    background: var(--calendar-white) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12'%3E%3Cpath fill='%231e4620' d='M6 9 1 4h10z'/%3E%3C/svg%3E") no-repeat right 1rem center;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--calendar-primary);
+}
+
+/* ==========================================================================
+   iCAL EXPORT BUTTON
+   ========================================================================== */
+
+.ical-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--calendar-white);
+    color: var(--calendar-primary);
+    border: 2px solid var(--calendar-primary);
+    border-radius: var(--calendar-radius-sm);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.ical-export-btn:hover {
+    background: var(--calendar-primary);
+    color: var(--calendar-white);
+}
+
+.ical-export-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ==========================================================================
+   TODAY INDICATOR
+   ========================================================================== */
+
+.feast-day-item.is-today {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 165, 0, 0.1) 100%);
+    border: 2px solid var(--calendar-gold);
+}
+
+.today-badge {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background: var(--calendar-gold);
+    color: #4a3500;
+    border-radius: var(--calendar-radius-full);
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .calendar-header {
+        padding: 3rem 0 2.5rem;
+    }
+
+    .calendar-title {
+        font-size: 2rem;
+    }
+
+    .calendar-description {
+        font-size: 1rem;
+        padding: 0 1rem;
+    }
+
+    .year-selector {
+        flex-direction: column;
+        padding: 0.5rem;
+        width: calc(100% - 2rem);
+        max-width: 300px;
+    }
+
+    .year-btn {
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+    }
+
+    .months-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .month-card {
+        margin: 0 0.5rem;
+    }
+
+    .legend-grid,
+    .colors-grid,
+    .saints-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feast-day-item {
+        padding: 0.875rem 1rem;
+    }
+
+    .feast-date {
+        flex-direction: row;
+        min-width: auto;
+        gap: 0.75rem;
+    }
+
+    .date-number {
+        font-size: 1.375rem;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .search-row {
+        flex-direction: column;
+    }
+
+    .search-input,
+    .filter-select {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-header {
+        padding: 2.5rem 0 2rem;
+    }
+
+    .calendar-title {
+        font-size: 1.75rem;
+    }
+
+    .month-name {
+        font-size: 1.1rem;
+        padding: 0.875rem 1rem;
+    }
+
+    .feast-day-item {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .feast-date {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+
+    .feast-name {
+        font-size: 0.9rem;
+    }
+
+    .calendar-cta {
+        padding: 2rem 1.25rem;
+        margin: 0 0.5rem;
+    }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+
+@media print {
+    .calendar-header {
+        background: none !important;
+        color: #000 !important;
+        padding: 1rem 0;
+    }
+
+    .calendar-title,
+    .calendar-description {
+        color: #000 !important;
+    }
+
+    .year-selector,
+    .month-nav,
+    .calendar-cta,
+    .ical-export-btn {
+        display: none;
+    }
+
+    .month-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+
+    .feast-day-item {
+        border: none;
+    }
+
+    .feast-day-item.irish-feast {
+        background: #f0f0f0 !important;
+    }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.feast-day-item:focus-visible,
+.year-btn:focus-visible,
+.month-nav-btn:focus-visible {
+    outline: 3px solid var(--calendar-primary);
+    outline-offset: 2px;
+}
+
+@media (prefers-contrast: high) {
+    .rank-badge,
+    .color-dot,
+    .color-indicator {
+        border-width: 3px;
+    }
+
+    .feast-day-item {
+        border: 2px solid currentColor;
+    }
+}
