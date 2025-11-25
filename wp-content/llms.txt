@@ -1,0 +1,83 @@
+# PilgrimIRL - Ireland's Sacred Heritage Database
+
+> Discover Ireland's ancient monastic sites, pilgrimage routes, holy wells, and Christian heritage across all 32 counties.
+
+## About PilgrimIRL
+
+PilgrimIRL is a comprehensive database documenting Ireland's sacred Christian heritage spanning over 1,500 years. The site catalogs 817+ sacred sites across all 32 counties of Ireland, including ancient monasteries, pilgrimage routes, holy wells, high crosses, and Christian ruins.
+
+## Core Content Areas
+
+### Monastic Sites
+Ancient Irish monasteries and abbeys from the early Christian period (5th-12th century) through the medieval era. Includes famous sites like Glendalough, Clonmacnoise, Skellig Michael, and hundreds of lesser-known foundations established by Cistercian, Augustinian, Franciscan, and other religious orders.
+
+### Pilgrimage Routes
+Sacred walking paths and traditional pilgrimage routes across Ireland, including:
+- Croagh Patrick (Mayo)
+- St. Kevin's Way (Wicklow)
+- Cosán na Naomh / Saints Road (Kerry)
+- Tóchar Phádraig (Mayo)
+- Lough Derg pilgrimage (Donegal)
+
+### Christian Sites
+Holy wells, high crosses, mass rocks, and Christian ruins throughout Ireland. These sites represent the folk religious traditions and penal-era Catholic heritage of the Irish people.
+
+### Irish Saints
+Profiles of 101 Irish saints and their associated sacred sites, including:
+- St. Patrick (patron of Ireland)
+- St. Brigid of Kildare (female patron)
+- St. Colmcille/Columba (founder of Iona)
+- St. Kevin of Glendalough
+- St. Brendan the Navigator
+
+### Liturgical Calendar
+Irish Catholic liturgical calendar featuring feast days, solemnities, and commemorations of Irish saints throughout the year. Available for 2025 and 2026.
+
+## Site Data
+
+- **Total Sites:** 817+
+- **Counties Covered:** 32 (all of Ireland)
+- **Saints Documented:** 101
+- **Site Types:** Monasteries, Abbeys, Priories, Friaries, Holy Wells, High Crosses, Round Towers, Churches, Oratories, Mass Rocks, Pilgrimage Routes
+
+## Geographic Coverage
+
+All 32 counties of Ireland including:
+- **Connacht:** Galway, Mayo, Sligo, Roscommon, Leitrim
+- **Leinster:** Dublin, Wicklow, Wexford, Kilkenny, Carlow, Laois, Offaly, Westmeath, Longford, Meath, Louth, Kildare
+- **Munster:** Cork, Kerry, Clare, Limerick, Tipperary, Waterford
+- **Ulster:** Donegal, Cavan, Monaghan, Antrim, Down, Armagh, Tyrone, Fermanagh, Derry
+
+## API Endpoints
+
+REST API available for calendar data:
+- `GET /wp-json/pilgrimirl/v1/calendar` - Full liturgical calendar
+- `GET /wp-json/pilgrimirl/v1/calendar/today` - Today's feast
+- `GET /wp-json/pilgrimirl/v1/calendar/upcoming` - Upcoming feasts
+
+## Key URLs
+
+- Homepage: https://pilgrimirl.com/
+- Monastic Sites: https://pilgrimirl.com/monastic-sites/
+- Pilgrimage Routes: https://pilgrimirl.com/pilgrimage-routes/
+- Christian Sites: https://pilgrimirl.com/christian-sites/
+- Saints: https://pilgrimirl.com/saints/
+- Calendar: https://pilgrimirl.com/calendar/
+- Blog: https://pilgrimirl.com/blog/
+
+## Contact
+
+Website: https://pilgrimirl.com
+Location: Ireland
+
+## Content Licensing
+
+Content on PilgrimIRL is intended for educational and informational purposes about Ireland's Christian heritage.
+
+## Technical Information
+
+- Platform: WordPress
+- Theme: Custom PilgrimIRL theme
+- SEO: Yoast SEO
+- Structured Data: Schema.org JSON-LD (TouristAttraction, Place, Event)
+- Sitemap: https://pilgrimirl.com/sitemap_index.xml

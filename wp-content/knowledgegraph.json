@@ -1,0 +1,342 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://pilgrimirl.com/#organization",
+      "name": "PilgrimIRL",
+      "alternateName": "Pilgrim Ireland",
+      "url": "https://pilgrimirl.com",
+      "description": "Comprehensive database of Ireland's sacred Christian heritage including monastic sites, pilgrimage routes, holy wells, and Irish saints.",
+      "foundingDate": "2025",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Ireland",
+        "identifier": "IE"
+      },
+      "knowsAbout": [
+        "Irish monasteries",
+        "Pilgrimage routes in Ireland",
+        "Irish saints",
+        "Holy wells of Ireland",
+        "High crosses of Ireland",
+        "Celtic Christianity",
+        "Irish Catholic liturgical calendar",
+        "Early Christian Ireland",
+        "Medieval Irish monasticism"
+      ],
+      "sameAs": []
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://pilgrimirl.com/#website",
+      "url": "https://pilgrimirl.com",
+      "name": "PilgrimIRL",
+      "description": "Discover Ireland's Sacred Heritage",
+      "publisher": {
+        "@id": "https://pilgrimirl.com/#organization"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://pilgrimirl.com/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "inLanguage": "en-IE"
+    },
+    {
+      "@type": "Dataset",
+      "@id": "https://pilgrimirl.com/#dataset",
+      "name": "Ireland Sacred Sites Database",
+      "description": "Comprehensive database of 817+ sacred Christian sites across all 32 counties of Ireland, including monasteries, holy wells, high crosses, and pilgrimage routes.",
+      "url": "https://pilgrimirl.com",
+      "keywords": [
+        "Irish monasteries",
+        "pilgrimage routes Ireland",
+        "holy wells Ireland",
+        "high crosses Ireland",
+        "Irish saints",
+        "Christian heritage Ireland",
+        "sacred sites Ireland"
+      ],
+      "spatialCoverage": {
+        "@type": "Place",
+        "name": "Ireland",
+        "geo": {
+          "@type": "GeoShape",
+          "box": "51.4 -10.5 55.4 -5.5"
+        }
+      },
+      "temporalCoverage": "400/2025",
+      "variableMeasured": [
+        {
+          "@type": "PropertyValue",
+          "name": "Total Sites",
+          "value": "817+"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Counties Covered",
+          "value": "32"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Saints Documented",
+          "value": "101"
+        }
+      ],
+      "includedInDataCatalog": {
+        "@type": "DataCatalog",
+        "name": "PilgrimIRL Sacred Sites Catalog"
+      },
+      "distribution": {
+        "@type": "DataDownload",
+        "encodingFormat": "application/json",
+        "contentUrl": "https://pilgrimirl.com/wp-json/pilgrimirl/v1/calendar"
+      },
+      "creator": {
+        "@id": "https://pilgrimirl.com/#organization"
+      }
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://pilgrimirl.com/#site-types",
+      "name": "Sacred Site Types in Ireland",
+      "description": "Categories of sacred Christian sites documented on PilgrimIRL",
+      "numberOfItems": 4,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://pilgrimirl.com/monastic-sites/",
+            "name": "Monastic Sites",
+            "description": "Ancient Irish monasteries, abbeys, priories, and friaries from the early Christian and medieval periods"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://pilgrimirl.com/pilgrimage-routes/",
+            "name": "Pilgrimage Routes",
+            "description": "Sacred walking paths and traditional pilgrimage routes across Ireland"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://pilgrimirl.com/christian-sites/",
+            "name": "Christian Sites",
+            "description": "Holy wells, high crosses, mass rocks, round towers, and other Christian heritage sites"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "Thing",
+            "@id": "https://pilgrimirl.com/saints/",
+            "name": "Irish Saints",
+            "description": "101 Irish saints and their associated sacred sites across Ireland"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://pilgrimirl.com/#notable-saints",
+      "name": "Notable Irish Saints",
+      "description": "Major patron saints of Ireland documented on PilgrimIRL",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "Person",
+            "name": "Saint Patrick",
+            "alternateName": "Naomh Pádraig",
+            "description": "Patron saint of Ireland, 5th century missionary who converted Ireland to Christianity",
+            "birthDate": "0385",
+            "deathDate": "0461",
+            "nationality": "Romano-British",
+            "knowsAbout": ["Christianity", "Missionary work"],
+            "memberOf": {
+              "@type": "Organization",
+              "name": "Catholic Church"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "Person",
+            "name": "Saint Brigid of Kildare",
+            "alternateName": "Naomh Bríd",
+            "description": "Female patron saint of Ireland, founder of Kildare monastery",
+            "birthDate": "0451",
+            "deathDate": "0525",
+            "nationality": "Irish"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "Person",
+            "name": "Saint Colmcille",
+            "alternateName": ["Columba", "Naomh Colm Cille"],
+            "description": "Founder of Iona monastery, one of the Twelve Apostles of Ireland",
+            "birthDate": "0521",
+            "deathDate": "0597",
+            "nationality": "Irish"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "Person",
+            "name": "Saint Kevin of Glendalough",
+            "alternateName": "Naomh Caoimhín",
+            "description": "Founder of Glendalough monastic settlement in County Wicklow",
+            "birthDate": "0498",
+            "deathDate": "0618",
+            "nationality": "Irish"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "Person",
+            "name": "Saint Brendan the Navigator",
+            "alternateName": "Naomh Bréanainn",
+            "description": "Early Irish monastic saint known for legendary voyage to the Isle of the Blessed",
+            "birthDate": "0484",
+            "deathDate": "0577",
+            "nationality": "Irish"
+          }
+        }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://pilgrimirl.com/#notable-sites",
+      "name": "Notable Irish Monastic Sites",
+      "description": "Famous monastic sites in Ireland",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "LandmarksOrHistoricalBuildings",
+            "name": "Glendalough",
+            "description": "Early medieval monastic settlement founded by St. Kevin in the 6th century",
+            "address": {
+              "@type": "PostalAddress",
+              "addressRegion": "County Wicklow",
+              "addressCountry": "IE"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "LandmarksOrHistoricalBuildings",
+            "name": "Clonmacnoise",
+            "description": "Major monastic site on the River Shannon, founded by St. Ciarán in 544 AD",
+            "address": {
+              "@type": "PostalAddress",
+              "addressRegion": "County Offaly",
+              "addressCountry": "IE"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "LandmarksOrHistoricalBuildings",
+            "name": "Skellig Michael",
+            "description": "UNESCO World Heritage Site, remote island monastery off the coast of Kerry",
+            "address": {
+              "@type": "PostalAddress",
+              "addressRegion": "County Kerry",
+              "addressCountry": "IE"
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "LandmarksOrHistoricalBuildings",
+            "name": "Rock of Cashel",
+            "description": "Historic site featuring a round tower, Romanesque chapel, and Gothic cathedral",
+            "address": {
+              "@type": "PostalAddress",
+              "addressRegion": "County Tipperary",
+              "addressCountry": "IE"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://pilgrimirl.com/#faq",
+      "name": "Frequently Asked Questions about Irish Sacred Sites",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the oldest monastery in Ireland?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Armagh, founded by St. Patrick around 445 AD, is traditionally considered the oldest monastic foundation in Ireland. However, many early Christian sites like Ardmore (founded by St. Declan) may predate Patrick's arrival."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are the most famous pilgrimage sites in Ireland?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The most famous Irish pilgrimage sites include Croagh Patrick in County Mayo, Lough Derg in County Donegal, Knock Shrine in County Mayo, and Glendalough in County Wicklow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many holy wells are there in Ireland?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ireland has over 3,000 documented holy wells, making it one of the highest concentrations of sacred water sites in Europe. These wells are often associated with local saints and traditional healing practices."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who are the patron saints of Ireland?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The three patron saints of Ireland are St. Patrick (March 17), St. Brigid of Kildare (February 1), and St. Columba/Colmcille (June 9). St. Patrick is the primary patron saint."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a round tower in Ireland?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Round towers (cloigtheach in Irish) are tall, slender stone towers built at early medieval monastic sites in Ireland between the 9th and 12th centuries. They served as bell towers, landmarks, and places of refuge during Viking raids. About 65 survive in varying conditions across Ireland."
+          }
+        }
+      ]
+    }
+  ]
+}

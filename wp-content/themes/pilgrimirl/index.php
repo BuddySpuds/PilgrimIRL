@@ -210,7 +210,7 @@ get_header(); ?>
                 <h2>Join Our Community</h2>
                 <p>Connect with fellow pilgrims, share your experiences, and discover new sacred sites</p>
                 <div class="cta-buttons">
-                    <a href="/community" class="pilgrim-btn">Join Forum</a>
+                    <a href="/forum/" class="pilgrim-btn">Join Forum</a>
                     <a href="/blog" class="pilgrim-btn pilgrim-btn-secondary">Read Blog</a>
                 </div>
             </div>
