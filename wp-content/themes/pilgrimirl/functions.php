@@ -179,7 +179,9 @@ function pilgrimirl_enqueue_google_maps() {
     $api_key = get_option('pilgrimirl_google_maps_api_key', '');
     
     // Only load maps on relevant pages
-    if (is_singular(array('monastic_site', 'pilgrimage_route', 'christian_site')) || is_front_page() || is_page('counties') || is_page('saints') || is_page_template('page-saints.php') || is_tax('county')) {
+    if (is_singular(array('monastic_site', 'pilgrimage_route', 'christian_site')) ||
+        is_post_type_archive(array('monastic_site', 'pilgrimage_route', 'christian_site')) ||
+        is_front_page() || is_page('counties') || is_page('saints') || is_page_template('page-saints.php') || is_tax('county')) {
         
         // Only enqueue if we have a valid API key
         if (!empty($api_key)) {

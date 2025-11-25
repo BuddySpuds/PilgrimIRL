@@ -587,7 +587,8 @@
     color: var(--gray-900);
 }
 
-.archive-map-container {
+.archive-map-container,
+.archive-overview-map {
     height: 500px;
     border-radius: var(--radius-xl);
     overflow: hidden;
