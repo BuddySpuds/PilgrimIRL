@@ -11,6 +11,78 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Fix calendar page year parameter conflict with WordPress date archives
+ * WordPress treats 'year' as a date archive query, causing 404 on calendar page
+ */
+function pilgrimirl_fix_calendar_year_query($query) {
+    // Only on frontend, main query
+    if (is_admin() || !$query->is_main_query()) {
+        return;
+    }
+
+    // Check if we're trying to access calendar page with year parameter
+    // WordPress sees ?year=2026 and thinks it's a date archive
+    if (isset($_GET['year'])) {
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        // If the URL contains /calendar/ with a year parameter
+        if (strpos($request_uri, '/calendar/') !== false || strpos($request_uri, 'page_id=') !== false) {
+            // Get the calendar page
+            $calendar_page = get_page_by_path('calendar');
+
+            if ($calendar_page) {
+                // Override the query to load the calendar page
+                $query->set('page_id', $calendar_page->ID);
+                $query->set('post_type', 'page');
+                $query->is_date = false;
+                $query->is_year = false;
+                $query->is_archive = false;
+                $query->is_page = true;
+                $query->is_singular = true;
+                $query->is_404 = false;
+            }
+        }
+    }
+}
+add_action('pre_get_posts', 'pilgrimirl_fix_calendar_year_query', 1);
+
+/**
+ * Handle 404 override for calendar year pages
+ */
+function pilgrimirl_calendar_handle_404() {
+    global $wp_query;
+
+    if (is_404() && isset($_GET['year'])) {
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        if (strpos($request_uri, '/calendar/') !== false) {
+            $calendar_page = get_page_by_path('calendar');
+
+            if ($calendar_page) {
+                // Reset 404 status
+                status_header(200);
+                $wp_query->is_404 = false;
+                $wp_query->is_page = true;
+                $wp_query->is_singular = true;
+
+                // Load the calendar page
+                $wp_query->queried_object = $calendar_page;
+                $wp_query->queried_object_id = $calendar_page->ID;
+                $wp_query->post = $calendar_page;
+                $wp_query->posts = array($calendar_page);
+                $wp_query->found_posts = 1;
+                $wp_query->post_count = 1;
+
+                // Load the template
+                include(get_page_template_slug($calendar_page->ID) ? locate_template(get_page_template_slug($calendar_page->ID)) : get_stylesheet_directory() . '/page-calendar.php');
+                exit;
+            }
+        }
+    }
+}
+add_action('template_redirect', 'pilgrimirl_calendar_handle_404', 1);
+
+/**
  * Helper function to get asset URL with automatic minification in production
  *
  * @param string $path Relative path to asset (e.g., 'css/footer.css')
