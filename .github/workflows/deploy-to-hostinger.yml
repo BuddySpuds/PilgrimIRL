@@ -54,29 +54,29 @@ jobs:
             --exclude='*.log' \
             --exclude='.DS_Store' \
             -e "ssh -p $SSH_PORT -o StrictHostKeyChecking=no" \
-            ./app/public/wp-content/themes/pilgrimirl/ \
+            ./wp-content/themes/pilgrimirl/ \
             $SSH_USER@$SSH_HOST:$WEB_ROOT/wp-content/themes/pilgrimirl/
 
           echo "✅ Theme deployed successfully"
 
           # Deploy plugins if changed
-          if [ -d "./app/public/wp-content/plugins" ]; then
+          if [ -d "./wp-content/plugins" ]; then
             echo "📦 Deploying plugins..."
             SSHPASS="$SSH_PASS" sshpass -e rsync -avz \
               --exclude='.git/' \
               --exclude='node_modules/' \
               -e "ssh -p $SSH_PORT -o StrictHostKeyChecking=no" \
-              ./app/public/wp-content/plugins/ \
+              ./wp-content/plugins/ \
               $SSH_USER@$SSH_HOST:$WEB_ROOT/wp-content/plugins/
             echo "✅ Plugins deployed"
           fi
 
           # Deploy mu-plugins if they exist
-          if [ -d "./app/public/wp-content/mu-plugins" ]; then
+          if [ -d "./wp-content/mu-plugins" ]; then
             echo "📦 Deploying mu-plugins..."
             SSHPASS="$SSH_PASS" sshpass -e rsync -avz \
               -e "ssh -p $SSH_PORT -o StrictHostKeyChecking=no" \
-              ./app/public/wp-content/mu-plugins/ \
+              ./wp-content/mu-plugins/ \
               $SSH_USER@$SSH_HOST:$WEB_ROOT/wp-content/mu-plugins/
             echo "✅ MU-plugins deployed"
           fi
