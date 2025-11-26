@@ -1099,14 +1099,15 @@ add_action('wp_ajax_nopriv_get_all_sites', 'pilgrimirl_get_all_sites');
  */
 function pilgrimirl_get_filtered_sites() {
     check_ajax_referer('pilgrimirl_nonce', 'nonce');
-    
+
     $post_type = sanitize_text_field($_POST['post_type'] ?? '');
     $county = sanitize_text_field($_POST['county'] ?? '');
     $saint = sanitize_text_field($_POST['saint'] ?? '');
     $century = sanitize_text_field($_POST['century'] ?? '');
-    
-    error_log("PilgrimIRL Filter Debug - Received filters: post_type={$post_type}, county={$county}, saint={$saint}, century={$century}");
-    
+    $site_type = sanitize_text_field($_POST['site_type'] ?? '');
+
+    error_log("PilgrimIRL Filter Debug - Received filters: post_type={$post_type}, county={$county}, saint={$saint}, century={$century}, site_type={$site_type}");
+
     $args = array(
         'post_type' => $post_type ? $post_type : array('monastic_site', 'pilgrimage_route', 'christian_site'),
         'posts_per_page' => -1,
@@ -1114,10 +1115,10 @@ function pilgrimirl_get_filtered_sites() {
         'orderby' => 'title',
         'order' => 'ASC'
     );
-    
+
     // Build tax query for taxonomy-based filters
     $tax_query = array('relation' => 'AND');
-    
+
     if ($county) {
         $tax_query[] = array(
             'taxonomy' => 'county',
@@ -1125,7 +1126,16 @@ function pilgrimirl_get_filtered_sites() {
             'terms' => $county
         );
     }
-    
+
+    // Add site_type filter (e.g., holy-well, high-cross)
+    if ($site_type) {
+        $tax_query[] = array(
+            'taxonomy' => 'site_type',
+            'field' => 'slug',
+            'terms' => $site_type
+        );
+    }
+
     // Only add century to tax_query if it exists as a taxonomy term
     if ($century) {
         $century_term = get_term_by('slug', $century, 'century');
@@ -1137,7 +1147,7 @@ function pilgrimirl_get_filtered_sites() {
             );
         }
     }
-    
+
     if (count($tax_query) > 1) {
         $args['tax_query'] = $tax_query;
     }

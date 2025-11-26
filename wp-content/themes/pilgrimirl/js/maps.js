@@ -157,20 +157,38 @@ function loadAllSitesForMap() {
     if (!pilgrimMaps.archiveMap) {
         return;
     }
-    
-    // Use AJAX to get all sites with coordinates
+
+    // Get filter values from map element data attributes or URL params
+    const mapElement = document.getElementById('archive-overview-map');
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const postType = mapElement?.dataset.postType || '';
+    const county = urlParams.get('county') || mapElement?.dataset.county || '';
+    const siteType = urlParams.get('site_type') || mapElement?.dataset.siteType || '';
+
+    console.log('PilgrimIRL: Loading sites with filters:', { postType, county, siteType });
+
+    // Use AJAX to get filtered sites
     jQuery.ajax({
         url: pilgrimirl_ajax.ajax_url,
         type: 'POST',
         data: {
-            action: 'get_all_sites',
-            nonce: pilgrimirl_ajax.nonce
+            action: 'get_filtered_sites',
+            nonce: pilgrimirl_ajax.nonce,
+            post_type: postType,
+            county: county,
+            site_type: siteType
         },
         success: function(response) {
             if (response.success && response.data) {
                 pilgrimMaps.allSites = response.data;
                 addMarkersToArchiveMap(response.data);
                 console.log('PilgrimIRL: Loaded ' + response.data.length + ' sites for overview map');
+
+                // Fit bounds to filtered markers
+                if (response.data.length > 0) {
+                    fitMapToMarkers();
+                }
             } else {
                 console.error('PilgrimIRL: Failed to load sites for map');
             }
@@ -179,6 +197,58 @@ function loadAllSitesForMap() {
             console.error('PilgrimIRL: AJAX error loading sites:', error);
         }
     });
+}
+
+/**
+ * Fit map bounds to show all markers
+ */
+function fitMapToMarkers() {
+    if (!pilgrimMaps.archiveMap || pilgrimMaps.markers.length === 0) {
+        return;
+    }
+
+    // Ireland bounding box - filter out any markers outside Ireland
+    const irelandBounds = {
+        north: 55.5,
+        south: 51.3,
+        west: -10.7,
+        east: -5.5
+    };
+
+    const bounds = new google.maps.LatLngBounds();
+    let validMarkers = 0;
+
+    pilgrimMaps.markers.forEach(marker => {
+        const pos = marker.getPosition();
+        const lat = pos.lat();
+        const lng = pos.lng();
+
+        // Only include markers within Ireland
+        if (lat >= irelandBounds.south && lat <= irelandBounds.north &&
+            lng >= irelandBounds.west && lng <= irelandBounds.east) {
+            bounds.extend(pos);
+            validMarkers++;
+        }
+    });
+
+    if (validMarkers > 0) {
+        pilgrimMaps.archiveMap.fitBounds(bounds);
+
+        // Don't zoom in too much for single markers or small clusters
+        google.maps.event.addListenerOnce(pilgrimMaps.archiveMap, 'idle', function() {
+            if (pilgrimMaps.archiveMap.getZoom() > 14) {
+                pilgrimMaps.archiveMap.setZoom(14);
+            }
+            if (pilgrimMaps.archiveMap.getZoom() < 6) {
+                pilgrimMaps.archiveMap.setZoom(7);
+                pilgrimMaps.archiveMap.setCenter({ lat: 53.5, lng: -8.0 });
+            }
+        });
+    } else {
+        // Default to Ireland view if no valid markers
+        pilgrimMaps.archiveMap.setCenter({ lat: 53.5, lng: -8.0 });
+        pilgrimMaps.archiveMap.setZoom(7);
+    }
 }
 
 /**
