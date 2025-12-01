@@ -22,10 +22,24 @@ get_header(); ?>
                         <select id="archive-county-filter" class="filter-select">
                             <option value="">All Counties</option>
                             <?php
+                            // Get counties that have pilgrimage_route posts
+                            global $wpdb;
+                            $counties_with_routes = $wpdb->get_col("
+                                SELECT DISTINCT t.slug
+                                FROM {$wpdb->terms} t
+                                JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+                                JOIN {$wpdb->term_relationships} tr ON tt.term_taxonomy_id = tr.term_taxonomy_id
+                                JOIN {$wpdb->posts} p ON tr.object_id = p.ID
+                                WHERE tt.taxonomy = 'county'
+                                AND p.post_type = 'pilgrimage_route'
+                                AND p.post_status = 'publish'
+                            ");
+
                             $counties = get_terms(array(
                                 'taxonomy' => 'county',
                                 'hide_empty' => true,
-                                'orderby' => 'name'
+                                'orderby' => 'name',
+                                'slug' => $counties_with_routes
                             ));
                             if ($counties && !is_wp_error($counties)) {
                                 foreach ($counties as $county) {
